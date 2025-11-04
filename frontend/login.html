@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - TravelMate</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        background: url("project images/login.jpg.jpg") no-repeat center
+          center/cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px 40px;
+        border-radius: 15px;
+        width: 350px;
+        color: black;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+      .logo {
+        text-align: center;
+        color: #008080;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .tagline {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+      input:focus {
+        outline: none;
+        border-color: #008080;
+      }
+      .login-btn {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        margin-top: 20px;
+        background: #008080;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.3s;
+      }
+      .login-btn:hover {
+        background: #006666;
+      }
+      .error-message,
+      .success-message {
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 15px;
+        display: none;
+        text-align: center;
+      }
+      .error-message {
+        background: #ffebee;
+        color: #c62828;
+        border: 1px solid #ef5350;
+      }
+      .success-message {
+        background: #e8f5e8;
+        color: #2e7d32;
+        border: 1px solid #4caf50;
+      }
+      p {
+        text-align: center;
+        margin-top: 20px;
+        color: #666;
+      }
+      a {
+        color: #008080;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .forgot-password {
+        text-align: center;
+        margin-top: 15px;
+      }
+      .forgot-password a {
+        color: #666;
+        font-size: 14px;
+      }
+      .back-home {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .back-home a {
+        color: #008080;
+        font-size: 14px;
+      }
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .popup {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      .popup h3 {
+        margin-top: 10px;
+        margin-bottom: 15px;
+        font-size: 20px;
+      }
+      .popup p {
+        margin-bottom: 20px;
+        font-size: 15px;
+        color: #444;
+      }
+      .popup button {
+        background: #008080;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .popup button:hover {
+        background: #006666;
+      }
+      .popup .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">TravelMate</div>
+      <div class="tagline">Your Ultimate Travel Companion</div>
+      <h2>Welcome Back!</h2>
+      <form id="loginForm">
+        <label for="userid">Email or Username</label>
+        <input
+          type="text"
+          id="userid"
+          placeholder="Enter your email or username"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          required
+        />
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+      <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+      <div class="back-home">
+        <a href="getstart.html">← Back to Home</a>
+      </div>
+    </div>
+
+    <script>
+      const users = JSON.parse(
+        localStorage.getItem("travelmate_users") || "[]"
+      );
+
+      function createPopup(title, message) {
+        const overlay = document.createElement("div");
+        overlay.className = "popup-overlay";
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+          <button class="close-btn">&times;</button>
+          <h3>${title}</h3>
+          <p>${message}</p>
+          <button class="ok-btn">OK</button>
+        `;
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        popup.querySelector(".ok-btn").addEventListener("click", () => {
+          overlay.remove();
+        });
+        popup.querySelector(".close-btn").addEventListener("click", () => {
+          overlay.remove();
+        });
+      }
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const userid = document.getElementById("userid").value.trim();
+          const password = document.getElementById("password").value;
+
+          const user = users.find(
+            (u) =>
+              (u.email === userid || u.username === userid) &&
+              u.password === password
+          );
+
+          if (user) {
+            localStorage.setItem(
+              "travelmate_current_user",
+              JSON.stringify(user)
+            );
+            createPopup(
+              "Login Successful",
+              "Welcome back, " + user.username + "!"
+            );
+            setTimeout(() => {
+              window.location.href = "main.html";
+            }, 2000);
+          } else {
+            const userExists = users.find(
+              (u) => u.email === userid || u.username === userid
+            );
+            if (userExists) {
+              createPopup(
+                "Login Failed",
+                "Incorrect password. Please try again."
+              );
+            } else {
+              createPopup(
+                "Login Failed",
+                "Account not found. Please sign up first or check your credentials."
+              );
+            }
+          }
+        });
+    </script>
+  </body>
+</html>

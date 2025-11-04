@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Bus Booking</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .booking-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .service-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #008080;
+        box-shadow: 0 0 10px rgba(0, 128, 128, 0.1);
+      }
+
+      .location-input {
+        position: relative;
+      }
+
+      .swap-btn {
+        position: absolute;
+        right: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #008080;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 18px;
+        z-index: 10;
+      }
+
+      .search-btn {
+        background: linear-gradient(45deg, #008080, #00a0a0);
+        color: white;
+        border: none;
+        padding: 18px 40px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 128, 128, 0.3);
+      }
+
+      .search-results {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+        display: none;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+      }
+
+      .result-item:hover {
+        border-color: #008080;
+        box-shadow: 0 2px 8px rgba(0, 128, 128, 0.1);
+      }
+
+      .bus-info {
+        flex: 1;
+      }
+
+      .bus-route {
+        font-size: 18px;
+        font-weight: bold;
+        color: #008080;
+        margin-bottom: 5px;
+      }
+
+      .bus-details {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .bus-price {
+        font-size: 20px;
+        font-weight: bold;
+        color: #28a745;
+        margin-right: 20px;
+      }
+
+      .book-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .book-btn:hover {
+        background: #006666;
+        transform: translateY(-2px);
+      }
+
+      .section-title {
+        color: #008080;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .result-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Bus Booking</h1>
+      <p>Find the best deals for buses</p>
+    </div>
+
+    <div class="container">
+      <div class="booking-card">
+        <div class="service-header">
+          <div class="service-title">Book Buses</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group location-input">
+            <label for="from">From</label>
+            <input
+              type="text"
+              id="from"
+              placeholder="Departure city"
+              list="cities"
+            />
+            <button
+              class="swap-btn"
+              onclick="swapLocations()"
+              title="Swap locations"
+            >
+              ⇄
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label for="to">To</label>
+            <input
+              type="text"
+              id="to"
+              placeholder="Destination city"
+              list="cities"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="date">Journey Date</label>
+            <input type="date" id="date" />
+          </div>
+
+          <div class="form-group">
+            <label for="type">Bus Type</label>
+            <select id="type">
+              <option value="ac">AC Seater</option>
+              <option value="nonac">Non-AC Seater</option>
+              <option value="sleeper">AC Sleeper</option>
+              <option value="volvo">Volvo AC</option>
+              <option value="luxury">Luxury</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="search-btn" onclick="searchBuses()">Search Buses</button>
+      </div>
+
+      <div class="search-results" id="search-results">
+        <div class="section-title">Available Buses</div>
+        <div id="results-container"></div>
+      </div>
+    </div>
+
+    <datalist id="cities">
+      <option value="Mumbai"></option>
+      <option value="Delhi"></option>
+      <option value="Bangalore"></option>
+      <option value="Chennai"></option>
+      <option value="Kolkata"></option>
+      <option value="Hyderabad"></option>
+      <option value="Pune"></option>
+      <option value="Ahmedabad"></option>
+      <option value="Jaipur"></option>
+      <option value="Goa"></option>
+    </datalist>
+
+    <script src="booking-modal.js"></script>
+    <script>
+      function swapLocations() {
+        const fromField = document.getElementById("from");
+        const toField = document.getElementById("to");
+
+        const temp = fromField.value;
+        fromField.value = toField.value;
+        toField.value = temp;
+      }
+
+      function searchBuses() {
+        const from = document.getElementById("from").value;
+        const to = document.getElementById("to").value;
+        const date = document.getElementById("date").value;
+
+        if (!from || !to || !date) {
+          alert(
+            "Please fill in all required fields (From, To, and Journey Date)"
+          );
+          return;
+        }
+
+        showSearchResults(from, to, date);
+        alert(`Found buses for your journey from ${from} to ${to}`);
+      }
+
+      function showSearchResults(from, to, date) {
+        const resultsContainer = document.getElementById("results-container");
+        const searchResults = document.getElementById("search-results");
+
+        const operators = [
+          "RedBus",
+          "Travels India",
+          "VRL Travels",
+          "SRS Travels",
+          "Orange Travels",
+        ];
+        const results = [];
+
+        for (let i = 0; i < 5; i++) {
+          const operator = operators[i];
+          const price = 500 + Math.random() * 800;
+          const departTime = `${18 + i}:${Math.floor(Math.random() * 60)
+            .toString()
+            .padStart(2, "0")}`;
+          const arriveTime = `${6 + i}:${Math.floor(Math.random() * 60)
+            .toString()
+            .padStart(2, "0")}`;
+
+          results.push({
+            id: `BU${Date.now()}_${i}`,
+            operator: operator,
+            route: `${from} → ${to}`,
+            departure: departTime,
+            arrival: arriveTime,
+            duration: "12h 45m",
+            price: Math.round(price),
+            date: date,
+          });
+        }
+
+        resultsContainer.innerHTML = "";
+        results.forEach((bus) => {
+          const resultItem = document.createElement("div");
+          resultItem.className = "result-item";
+          resultItem.innerHTML = `
+          <div class="bus-info">
+            <div class="bus-route">${bus.route}</div>
+            <div class="bus-details">${bus.operator} • ${bus.departure} - ${
+            bus.arrival
+          }</div>
+            <div class="bus-details">${bus.duration} • ${new Date(
+            bus.date
+          ).toLocaleDateString()}</div>
+          </div>
+          <div class="bus-price">₹${bus.price.toLocaleString()}</div>
+          <button class="book-btn" onclick="bookBus('${bus.id}', '${
+            bus.price
+          }', '${from}', '${to}', '${date}', '${bus.operator}', '${
+            bus.departure
+          }', '${bus.arrival}')">
+            Book Now
+          </button>
+        `;
+          resultsContainer.appendChild(resultItem);
+        });
+
+        searchResults.style.display = "block";
+        searchResults.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function bookBus(
+        id,
+        price,
+        from,
+        to,
+        date,
+        operator,
+        departure,
+        arrival
+      ) {
+        const busData = {
+          id: id,
+          type: "bus",
+          title: `${operator} Bus`,
+          from: from,
+          to: to,
+          date: date,
+          time: `${departure} - ${arrival}`,
+          price: `₹${price}`,
+          operator: operator,
+          departure: departure,
+          arrival: arrival,
+        };
+
+        window.showBookingModal(busData);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("date").min = today;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Upcoming Bookings</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .success-message {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        text-align: center;
+        border-left: 5px solid #28a745;
+      }
+
+      .success-icon {
+        font-size: 64px;
+        color: #28a745;
+        margin-bottom: 20px;
+      }
+
+      .success-title {
+        font-size: 28px;
+        color: #008080;
+        margin-bottom: 10px;
+      }
+
+      .success-subtitle {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .booking-summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+
+      .bookings-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-title {
+        color: #008080;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .booking-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #008080;
+        transition: all 0.3s;
+      }
+
+      .booking-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 128, 128, 0.1);
+      }
+
+      .booking-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .service-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .service-icon {
+        font-size: 32px;
+      }
+
+      .service-details h3 {
+        margin: 0;
+        color: #008080;
+        font-size: 18px;
+      }
+
+      .service-details p {
+        margin: 5px 0 0 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .booking-status {
+        background: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .booking-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .detail-label {
+        font-size: 12px;
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .detail-value {
+        color: #333;
+        font-size: 14px;
+      }
+
+      .route-display {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        color: #008080;
+      }
+
+      .route-arrow {
+        color: #666;
+      }
+
+      .price-display {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .empty-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: #008080;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #006666;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #545b62;
+        transform: translateY(-2px);
+      }
+
+      .filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        padding: 8px 16px;
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px;
+      }
+
+      .filter-btn.active {
+        border-color: #008080;
+        background: #008080;
+        color: white;
+      }
+
+      .filter-btn:hover {
+        border-color: #008080;
+      }
+
+      .download-ticket-btn {
+        background: linear-gradient(135deg, #667eea 0%, #4b7ca2 100%);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .download-ticket-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(18, 165, 219, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .booking-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .booking-details {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .filters {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Upcoming Bookings</h1>
+      <p>Manage your travel plans</p>
+    </div>
+
+    <div class="container">
+      <div class="success-message" id="success-message" style="display: none">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Booking Confirmed!</div>
+        <div class="success-subtitle">
+          Your booking has been successfully confirmed
+        </div>
+        <div class="booking-summary" id="latest-booking-summary"></div>
+      </div>
+
+      <div class="bookings-section">
+        <div class="section-title">
+          <span>Your Bookings</span>
+        </div>
+
+        <div class="filters">
+          <button class="filter-btn active" onclick="filterBookings('all')">
+            All
+          </button>
+          <button class="filter-btn" onclick="filterBookings('flight')">
+            Flights
+          </button>
+          <button class="filter-btn" onclick="filterBookings('train')">
+            Trains
+          </button>
+          <button class="filter-btn" onclick="filterBookings('bus')">
+            Buses
+          </button>
+          <button class="filter-btn" onclick="filterBookings('cab')">
+            Cabs
+          </button>
+          <button class="filter-btn" onclick="filterBookings('hotel')">
+            Hotels
+          </button>
+        </div>
+
+        <div id="bookings-container"></div>
+
+        <div class="action-buttons">
+          <a href="main.html" class="btn btn-primary">
+            <span>Book More Services</span>
+          </a>
+          <button class="btn btn-secondary" onclick="downloadAllBookings()">
+            <span>Download All</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentFilter = "all";
+      let allBookings = [];
+
+      function getServiceIcon(type) {
+        return icons[type] || "";
+      }
+
+      function getServiceTitle(type) {
+        const titles = {
+          flight: "Flight",
+          train: "Train",
+          bus: "Bus",
+          cab: "Cab",
+          cruise: "Cruise",
+          hotel: "Hotel",
+          tour: "Tour Package",
+          insurance: "Travel Insurance",
+        };
+        return titles[type] || "Service";
+      }
+
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        });
+      }
+
+      function formatTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function loadBookings() {
+        allBookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+
+        allBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        displayBookings();
+
+        checkForNewBooking();
+      }
+
+      function checkForNewBooking() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const newBooking = urlParams.get("new");
+
+        if (newBooking === "true" && allBookings.length > 0) {
+          const latestBooking = allBookings[0];
+          showSuccessMessage(latestBooking);
+
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
+        }
+      }
+
+      function showSuccessMessage(booking) {
+        const successMessage = document.getElementById("success-message");
+        const summaryDiv = document.getElementById("latest-booking-summary");
+
+        summaryDiv.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px; justify-content: center;">
+          <div style="font-size: 32px;">${getServiceIcon(booking.type)}</div>
+          <div>
+            <div style="font-weight: bold; color: #008080;">${
+              booking.title
+            }</div>
+            <div style="color: #666; font-size: 14px;">
+              ${
+                booking.from && booking.to
+                  ? `${booking.from} → ${booking.to}`
+                  : ""
+              }
+            </div>
+            <div style="color: #28a745; font-weight: bold;">${
+              booking.price
+            }</div>
+          </div>
+        </div>
+      `;
+
+        successMessage.style.display = "block";
+
+        setTimeout(() => {
+          successMessage.style.display = "none";
+        }, 10000);
+      }
+
+      function displayBookings() {
+        const container = document.getElementById("bookings-container");
+
+        let filteredBookings = allBookings;
+        if (currentFilter !== "all") {
+          filteredBookings = allBookings.filter(
+            (booking) => booking.type === currentFilter
+          );
+        }
+
+        if (filteredBookings.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+          
+            <h3>No bookings found</h3>
+            <p>${
+              currentFilter === "all"
+                ? "You haven't made any bookings yet."
+                : `No ${currentFilter} bookings found.`
+            }</p>
+            <a href="main.html" class="btn btn-primary" style="margin-top: 20px;">
+            
+              <span>Make Your First Booking</span>
+            </a>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = "";
+
+        filteredBookings.forEach((booking) => {
+          const bookingCard = document.createElement("div");
+          bookingCard.className = "booking-card";
+
+          bookingCard.innerHTML = `
+          <div class="booking-header">
+            <div class="service-info">
+              <div class="service-icon">${getServiceIcon(booking.type)}</div>
+              <div class="service-details">
+                <h3>${booking.title}</h3>
+                <p>Booking ID: ${booking.id}</p>
+              </div>
+            </div>
+            <div class="booking-status">${
+              booking.status?.toUpperCase() || "CONFIRMED"
+            }</div>
+          </div>
+          
+          <div class="booking-details">
+            ${
+              booking.from && booking.to
+                ? `
+              <div class="detail-item">
+                <div class="detail-label">Route</div>
+                <div class="detail-value">
+                  <div class="route-display">
+                    <span>${booking.from}</span>
+                    <span class="route-arrow">→</span>
+                    <span>${booking.to}</span>
+                  </div>
+                </div>
+              </div>
+            `
+                : ""
+            }
+            
+            <div class="detail-item">
+              <div class="detail-label">Travel Date</div>
+              <div class="detail-value">${formatDate(
+                booking.travelDate || booking.date
+              )}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">Booked On</div>
+              <div class="detail-value">${formatDate(booking.date)}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">Amount Paid</div>
+              <div class="detail-value">
+                <div class="price-display">${booking.price}</div>
+              </div>
+            </div>
+            
+            ${
+              booking.passenger
+                ? `
+              <div class="detail-item">
+                <div class="detail-label">Passenger</div>
+                <div class="detail-value">${booking.passenger.firstName} ${booking.passenger.lastName}</div>
+              </div>
+            `
+                : ""
+            }
+            
+            ${
+              booking.time
+                ? `
+              <div class="detail-item">
+                <div class="detail-label">Time</div>
+                <div class="detail-value">${booking.time}</div>
+              </div>
+            `
+                : ""
+            }
+          </div>
+          
+          <button class="download-ticket-btn" onclick="downloadTicket('${
+            booking.id
+          }')">
+             Download Ticket
+          </button>
+        `;
+
+          container.appendChild(bookingCard);
+        });
+      }
+
+      function filterBookings(type) {
+        currentFilter = type;
+
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        displayBookings();
+      }
+
+      function downloadAllBookings() {
+        if (allBookings.length === 0) {
+          alert("No bookings to download");
+          return;
+        }
+
+        const bookingData = allBookings.map((booking) => ({
+          "Booking ID": booking.id,
+          "Service Type": getServiceTitle(booking.type),
+          Title: booking.title,
+          From: booking.from || "N/A",
+          To: booking.to || "N/A",
+          "Travel Date": formatDate(booking.travelDate || booking.date),
+          "Booking Date": formatDate(booking.date),
+          Price: booking.price,
+          Status: booking.status || "Confirmed",
+          Passenger: booking.passenger
+            ? `${booking.passenger.firstName} ${booking.passenger.lastName}`
+            : "N/A",
+        }));
+
+        const csvContent = convertToCSV(bookingData);
+        downloadCSV(csvContent, "travelmate_bookings.csv");
+      }
+
+      function convertToCSV(data) {
+        const headers = Object.keys(data[0]);
+        const csvRows = [];
+
+        csvRows.push(headers.join(","));
+
+        data.forEach((row) => {
+          const values = headers.map((header) => {
+            const value = row[header];
+            return `"${value}"`;
+          });
+          csvRows.push(values.join(","));
+        });
+
+        return csvRows.join("\n");
+      }
+
+      function downloadCSV(csvContent, filename) {
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.setAttribute("hidden", "");
+        a.setAttribute("href", url);
+        a.setAttribute("download", filename);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      function downloadTicket(bookingId) {
+        const booking = allBookings.find((b) => b.id === bookingId);
+        if (!booking) {
+          alert("Booking not found");
+          return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFont("helvetica");
+        doc.setFontSize(20);
+        doc.setTextColor(0, 128, 128);
+        doc.text("TravelMate", 20, 30);
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text("Travel Ticket", 20, 45);
+        doc.setFontSize(12);
+        doc.text(`Service: ${booking.title}`, 20, 70);
+        doc.text(`Booking ID: ${booking.id}`, 20, 85);
+
+        if (booking.from && booking.to) {
+          doc.text(`Route: ${booking.from} → ${booking.to}`, 20, 100);
+        }
+
+        doc.text(
+          `Travel Date: ${formatDate(booking.travelDate || booking.date)}`,
+          20,
+          115
+        );
+        doc.text(`Booking Date: ${formatDate(booking.date)}`, 20, 130);
+        doc.text(`Amount Paid: ${booking.price}`, 20, 145);
+        doc.text(`Status: ${booking.status || "Confirmed"}`, 20, 160);
+        if (booking.passenger) {
+          doc.text(
+            `Passenger: ${booking.passenger.firstName} ${booking.passenger.lastName}`,
+            20,
+            175
+          );
+        }
+        doc.setFontSize(10);
+        doc.setTextColor(128, 128, 128);
+        doc.text("Thank you for choosing TravelMate!", 20, 200);
+        doc.text("Please present this ticket at check-in.", 20, 210);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 220);
+        doc.save(`TravelMate_Ticket_${booking.id}.pdf`);
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        loadBookings();
+      });
+    </script>
+  </body>
+</html>

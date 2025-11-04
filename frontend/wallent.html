@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Wallet</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .wallet-card {
+        background: linear-gradient(135deg, #008080, #00a0a0);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wallet-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: shimmer 3s infinite;
+      }
+
+      .balance-section {
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .balance-label {
+        font-size: 16px;
+        opacity: 0.9;
+        margin-bottom: 10px;
+      }
+
+      .balance-amount {
+        font-size: 48px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .wallet-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s;
+        backdrop-filter: blur(10px);
+      }
+
+      .action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .sections-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+      }
+
+      .section-title {
+        color: #008080;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .add-money-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .amount-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .amount-btn {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+
+      .amount-btn:hover,
+      .amount-btn.selected {
+        background: #008080;
+        color: white;
+        border-color: #008080;
+      }
+
+      .custom-amount {
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+
+      .custom-amount:focus {
+        outline: none;
+        border-color: #008080;
+      }
+
+      .payment-methods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .payment-method:hover,
+      .payment-method.selected {
+        border-color: #008080;
+        background: #f0fdfd;
+      }
+
+      .add-money-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s;
+      }
+
+      .add-money-btn:hover {
+        background: #006666;
+      }
+
+      .add-money-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .transaction-item:last-child {
+        border-bottom: none;
+      }
+
+      .transaction-info {
+        flex: 1;
+      }
+
+      .transaction-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .transaction-date {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .transaction-amount {
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .amount-credit {
+        color: #28a745;
+      }
+
+      .amount-debit {
+        color: #dc3545;
+      }
+
+      .no-transactions {
+        text-align: center;
+        color: #666;
+        padding: 40px 20px;
+      }
+
+      .offers-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .offer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+      }
+
+      .offer-item:hover {
+        border-color: #008080;
+        box-shadow: 0 2px 8px rgba(0, 128, 128, 0.1);
+      }
+
+      .offer-info h4 {
+        margin: 0 0 5px 0;
+        color: #008080;
+      }
+
+      .offer-info p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .offer-code {
+        background: #f8f9fa;
+        color: #333;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        border: 2px dashed #dee2e6;
+      }
+      .payment-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .payment-modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+      }
+
+      .processing-animation {
+        width: 80px;
+        height: 80px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #008080;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .success-animation {
+        width: 80px;
+        height: 80px;
+        background: #28a745;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 40px;
+      }
+
+      .modal-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .modal-message {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .modal-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .wallet-actions {
+          flex-direction: column;
+        }
+
+        .amount-buttons {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .payment-methods {
+          grid-template-columns: 1fr;
+        }
+
+        .offer-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>TravelMate Wallet</h1>
+      <p>Manage your travel funds securely</p>
+    </div>
+
+    <div class="container">
+      <div class="wallet-card">
+        <div class="balance-section">
+          <div class="balance-label">Available Balance</div>
+          <div class="balance-amount" id="wallet-balance">₹0</div>
+          <div class="wallet-actions">
+            <button class="action-btn" onclick="showAddMoney()">
+              Add Money
+            </button>
+            <button class="action-btn" onclick="showTransactions()">
+              Transactions
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="sections-container">
+        <div class="section-card" id="add-money-section">
+          <div class="section-title">Add Money to Wallet</div>
+
+          <div class="add-money-form">
+            <div class="amount-buttons">
+              <button class="amount-btn" onclick="selectAmount(500)">
+                ₹500
+              </button>
+              <button class="amount-btn" onclick="selectAmount(1000)">
+                ₹1,000
+              </button>
+              <button class="amount-btn" onclick="selectAmount(2000)">
+                ₹2,000
+              </button>
+              <button class="amount-btn" onclick="selectAmount(5000)">
+                ₹5,000
+              </button>
+              <button class="amount-btn" onclick="selectAmount(10000)">
+                ₹10,000
+              </button>
+              <button class="amount-btn" onclick="selectAmount(20000)">
+                ₹20,000
+              </button>
+            </div>
+
+            <input
+              type="number"
+              class="custom-amount"
+              id="custom-amount"
+              placeholder="Enter custom amount"
+              min="100"
+              max="50000"
+            />
+
+            <div class="payment-methods">
+              <div
+                class="payment-method selected"
+                onclick="selectPaymentMethod(this, 'upi')"
+              >
+                <span>UPI</span>
+              </div>
+              <div
+                class="payment-method"
+                onclick="selectPaymentMethod(this, 'card')"
+              >
+                <span>Debit/Credit Card</span>
+              </div>
+              <div
+                class="payment-method"
+                onclick="selectPaymentMethod(this, 'netbanking')"
+              >
+                <span>Net Banking</span>
+              </div>
+              <div
+                class="payment-method"
+                onclick="selectPaymentMethod(this, 'wallet')"
+              >
+                <span>Other Wallets</span>
+              </div>
+            </div>
+
+            <button class="add-money-btn" onclick="addMoney()">
+              Add Money Securely
+            </button>
+          </div>
+        </div>
+        <div class="section-card" id="transactions-section">
+          <div class="section-title">Recent Transactions</div>
+          <div id="transactions-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="payment-modal" id="payment-modal">
+      <div class="modal-content">
+        <div id="modal-animation">
+          <div class="processing-animation"></div>
+        </div>
+        <div class="modal-title" id="modal-title">Processing Payment</div>
+        <div class="modal-message" id="modal-message">
+          Please wait while we process your payment...
+        </div>
+        <button
+          class="modal-btn"
+          id="modal-btn"
+          onclick="closeModal()"
+          style="display: none"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let selectedAmount = 0;
+      let selectedPaymentMethod = "upi";
+
+      function loadWalletData() {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+
+        if (!user) {
+          document.getElementById("wallet-balance").textContent = "₹0";
+          document.getElementById("transactions-list").innerHTML = `
+          <div class="no-transactions">
+            <h4>Please Login First</h4>
+            <p>You need to login to access your wallet.</p>
+          </div>
+        `;
+          return;
+        }
+        const walletData = JSON.parse(
+          localStorage.getItem(`travelmate_wallet_${user.id}`) ||
+            '{"balance": 0, "transactions": []}'
+        );
+        document.getElementById(
+          "wallet-balance"
+        ).textContent = `₹${walletData.balance.toLocaleString()}`;
+
+        loadTransactions(walletData.transactions);
+      }
+
+      function loadTransactions(transactions) {
+        const container = document.getElementById("transactions-list");
+
+        if (transactions.length === 0) {
+          container.innerHTML = `
+          <div class="no-transactions">
+            <h4>No Transactions Yet</h4>
+            <p>Your wallet transactions will appear here</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = "";
+        transactions
+          .slice(-10)
+          .reverse()
+          .forEach((transaction) => {
+            const transactionItem = document.createElement("div");
+            transactionItem.className = "transaction-item";
+
+            const isCredit = transaction.type === "credit";
+            const amountClass = isCredit ? "amount-credit" : "amount-debit";
+            const amountPrefix = isCredit ? "+" : "-";
+
+            transactionItem.innerHTML = `
+          <div class="transaction-info">
+            <div class="transaction-title">${transaction.description}</div>
+            <div class="transaction-date">${new Date(
+              transaction.date
+            ).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}</div>
+          </div>
+          <div class="transaction-amount ${amountClass}">
+            ${amountPrefix}₹${transaction.amount.toLocaleString()}
+          </div>
+        `;
+
+            container.appendChild(transactionItem);
+          });
+      }
+
+      function selectAmount(amount) {
+        selectedAmount = amount;
+        document.getElementById("custom-amount").value = amount;
+        document.querySelectorAll(".amount-btn").forEach((btn) => {
+          btn.classList.remove("selected");
+          if (btn.textContent === `₹${amount.toLocaleString()}`) {
+            btn.classList.add("selected");
+          }
+        });
+      }
+
+      function selectPaymentMethod(element, method) {
+        selectedPaymentMethod = method;
+        document.querySelectorAll(".payment-method").forEach((btn) => {
+          btn.classList.remove("selected");
+        });
+        element.classList.add("selected");
+      }
+
+      function addMoney() {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+
+        if (!user) {
+          alert("Please login to add money to wallet");
+          window.location.href = "login.html";
+          return;
+        }
+
+        const customAmount = document.getElementById("custom-amount").value;
+        const amount = parseInt(customAmount) || selectedAmount;
+
+        if (!amount || amount < 100) {
+          alert("Please enter a valid amount (minimum ₹100)");
+          return;
+        }
+
+        if (amount > 50000) {
+          alert("Maximum amount allowed is ₹50,000 per transaction");
+          return;
+        }
+        showPaymentModal(amount);
+      }
+
+      function showPaymentModal(amount) {
+        const modal = document.getElementById("payment-modal");
+        const modalAnimation = document.getElementById("modal-animation");
+        const modalTitle = document.getElementById("modal-title");
+        const modalMessage = document.getElementById("modal-message");
+        const modalBtn = document.getElementById("modal-btn");
+
+        modalAnimation.innerHTML = '<div class="processing-animation"></div>';
+        modalTitle.textContent = "Processing Payment";
+        modalMessage.textContent = `Processing payment of ₹${amount.toLocaleString()} via ${getPaymentMethodName(
+          selectedPaymentMethod
+        )}...`;
+        modalBtn.style.display = "none";
+
+        modal.classList.add("show");
+
+        setTimeout(() => {
+          modalAnimation.innerHTML = '<div class="success-animation">✓</div>';
+          modalTitle.textContent = "Payment Successful!";
+          modalMessage.textContent = `₹${amount.toLocaleString()} has been added to your wallet successfully.`;
+          modalBtn.style.display = "inline-block";
+
+          updateWalletBalance(amount);
+        }, 3000);
+      }
+
+      function updateWalletBalance(amount) {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+        const walletData = JSON.parse(
+          localStorage.getItem(`travelmate_wallet_${user.id}`) ||
+            '{"balance": 0, "transactions": []}'
+        );
+
+        walletData.balance += amount;
+
+        walletData.transactions.push({
+          type: "credit",
+          amount: amount,
+          description: `Money added via ${getPaymentMethodName(
+            selectedPaymentMethod
+          )}`,
+          date: new Date().toISOString(),
+          id: Date.now(),
+        });
+
+        localStorage.setItem(
+          `travelmate_wallet_${user.id}`,
+          JSON.stringify(walletData)
+        );
+
+        document.getElementById("custom-amount").value = "";
+        document
+          .querySelectorAll(".amount-btn")
+          .forEach((btn) => btn.classList.remove("selected"));
+        selectedAmount = 0;
+
+        loadWalletData();
+      }
+
+      function getPaymentMethodName(method) {
+        const methods = {
+          upi: "UPI",
+          card: "Debit/Credit Card",
+          netbanking: "Net Banking",
+          wallet: "Other Wallet",
+        };
+        return methods[method] || "UPI";
+      }
+
+      function closeModal() {
+        document.getElementById("payment-modal").classList.remove("show");
+      }
+
+      function showAddMoney() {
+        document
+          .getElementById("add-money-section")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function showTransactions() {
+        document
+          .getElementById("transactions-section")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      document
+        .getElementById("custom-amount")
+        .addEventListener("input", function () {
+          const amount = parseInt(this.value);
+          if (amount) {
+            selectedAmount = amount;
+
+            document
+              .querySelectorAll(".amount-btn")
+              .forEach((btn) => btn.classList.remove("selected"));
+          }
+        });
+
+      document
+        .getElementById("payment-modal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+      document.addEventListener("DOMContentLoaded", function () {
+        loadWalletData();
+      });
+    </script>
+  </body>
+</html>

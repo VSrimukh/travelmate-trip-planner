@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Profile</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .profile-sidebar {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 48px;
+        color: white;
+        font-weight: bold;
+      }
+
+      .profile-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .profile-email {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #008080;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .profile-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-title {
+        color: #008080;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #008080;
+      }
+
+      .save-button {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+
+      .save-button:hover {
+        background: #006666;
+      }
+
+      .logout-button {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 20px;
+        width: 100%;
+      }
+
+      .logout-button:hover {
+        background: #c82333;
+      }
+
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+        .profile-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-button">← Back</a>
+      <h1>My Profile</h1>
+      <p>Manage your account information</p>
+    </div>
+
+    <div class="container">
+      <div class="profile-sidebar">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <div class="profile-name" id="profileName">Loading...</div>
+        <div class="profile-email" id="profileEmail">Loading...</div>
+
+        <div class="profile-stats">
+          <div class="stat-item">
+            <div class="stat-number" id="totalBookings">0</div>
+            <div class="stat-label">Total Bookings</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="totalSpent">₹0</div>
+            <div class="stat-label">Total Spent</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="tripsCompleted">0</div>
+            <div class="stat-label">Trips Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="memberSince">2025</div>
+            <div class="stat-label">Member Since</div>
+          </div>
+        </div>
+
+        <button class="logout-button" onclick="logout()">Logout</button>
+      </div>
+
+      <div class="profile-section">
+        <div class="section-title">Personal Information</div>
+        <form id="personalInfoForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" required />
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" required />
+            </div>
+            <div class="form-group">
+              <label for="dateOfBirth">Date of Birth</label>
+              <input type="date" id="dateOfBirth" required />
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+                <option value="prefer-not-to-say">Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="save-button">
+            Save Personal Information
+          </button>
+        </form>
+      </div>
+
+      <div class="profile-section">
+        <div class="section-title">Address Information</div>
+        <form id="addressForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="address">Street Address</label>
+              <input
+                type="text"
+                id="address"
+                placeholder="Enter your address"
+              />
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" required />
+            </div>
+            <div class="form-group">
+              <label for="state">State/Province</label>
+              <input type="text" id="state" required />
+            </div>
+            <div class="form-group">
+              <label for="zipCode">ZIP/Postal Code</label>
+              <input type="text" id="zipCode" required />
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" required>
+                <option value="">Select Country</option>
+                <option value="india">India</option>
+                <option value="usa">United States</option>
+                <option value="uk">United Kingdom</option>
+                <option value="canada">Canada</option>
+                <option value="australia">Australia</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="save-button">Save Address</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="popup-manager.js"></script>
+    <script>
+      function loadUserProfile() {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+
+        if (!user) {
+          showValidationError("Please login to access your profile");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 2000);
+          return;
+        }
+
+        document.getElementById("profileName").textContent =
+          user.fullname || `${user.firstname} ${user.lastname}`;
+        document.getElementById("profileEmail").textContent = user.email;
+
+        const initials =
+          (user.firstname?.[0] || "") + (user.lastname?.[0] || "");
+        document.getElementById("profileAvatar").textContent =
+          initials.toUpperCase();
+        document.getElementById("firstName").value = user.firstname || "";
+        document.getElementById("lastName").value = user.lastname || "";
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("phone").value = user.phone || "";
+        document.getElementById("dateOfBirth").value = user.dob || "";
+        document.getElementById("gender").value = user.gender || "";
+        document.getElementById("city").value = user.city || "";
+
+        const extendedProfile = JSON.parse(
+          localStorage.getItem(`travelmate_profile_${user.id}`) || "{}"
+        );
+
+        document.getElementById("address").value =
+          extendedProfile.address || "";
+        document.getElementById("state").value = extendedProfile.state || "";
+        document.getElementById("zipCode").value =
+          extendedProfile.zipCode || "";
+        document.getElementById("country").value =
+          extendedProfile.country || "";
+
+        loadUserStats(user.id);
+
+        const memberSince = new Date(
+          user.createdAt || Date.now()
+        ).getFullYear();
+        document.getElementById("memberSince").textContent = memberSince;
+      }
+
+      function loadUserStats(userId) {
+        const bookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+        const userBookings = bookings.filter(
+          (booking) => booking.userId === userId
+        );
+
+        document.getElementById("totalBookings").textContent =
+          userBookings.length;
+
+        const totalSpent = userBookings.reduce((sum, booking) => {
+          const price = parseInt(booking.price.replace(/[₹,]/g, "")) || 0;
+          return sum + price;
+        }, 0);
+        document.getElementById(
+          "totalSpent"
+        ).textContent = `₹${totalSpent.toLocaleString()}`;
+
+        const completedTrips = userBookings.filter(
+          (booking) => booking.status === "confirmed"
+        ).length;
+        document.getElementById("tripsCompleted").textContent = completedTrips;
+      }
+
+      document
+        .getElementById("personalInfoForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const user = JSON.parse(
+            localStorage.getItem("travelmate_current_user")
+          );
+          const users = JSON.parse(
+            localStorage.getItem("travelmate_users") || "[]"
+          );
+          const updatedUser = {
+            ...user,
+            firstname: document.getElementById("firstName").value,
+            lastname: document.getElementById("lastName").value,
+            fullname: `${document.getElementById("firstName").value} ${
+              document.getElementById("lastName").value
+            }`,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            dob: document.getElementById("dateOfBirth").value,
+            gender: document.getElementById("gender").value,
+            city: document.getElementById("city").value,
+          };
+
+          const userIndex = users.findIndex((u) => u.id === user.id);
+          if (userIndex !== -1) {
+            users[userIndex] = updatedUser;
+            localStorage.setItem("travelmate_users", JSON.stringify(users));
+          }
+
+          localStorage.setItem(
+            "travelmate_current_user",
+            JSON.stringify(updatedUser)
+          );
+
+          showSuccessPopup(
+            "Submission Successful!",
+            "Thank you for your submission. We have received your information and will process it shortly. You will receive a confirmation email within the next few minutes."
+          );
+          loadUserProfile();
+        });
+
+      document
+        .getElementById("addressForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const user = JSON.parse(
+            localStorage.getItem("travelmate_current_user")
+          );
+          const extendedProfile = JSON.parse(
+            localStorage.getItem(`travelmate_profile_${user.id}`) || "{}"
+          );
+
+          extendedProfile.address = document.getElementById("address").value;
+          extendedProfile.state = document.getElementById("state").value;
+          extendedProfile.zipCode = document.getElementById("zipCode").value;
+          extendedProfile.country = document.getElementById("country").value;
+
+          localStorage.setItem(
+            `travelmate_profile_${user.id}`,
+            JSON.stringify(extendedProfile)
+          );
+
+          showSuccessPopup(
+            "Submission Successful!",
+            "Thank you for your submission. We have received your information and will process it shortly. You will receive a confirmation email within the next few minutes."
+          );
+        });
+
+      function logout() {
+        if (confirm("Are you sure you want to logout?")) {
+          localStorage.removeItem("travelmate_current_user");
+          window.location.href = "login.html";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadUserProfile();
+      });
+    </script>
+  </body>
+</html>

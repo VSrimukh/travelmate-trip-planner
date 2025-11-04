@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - TravelMate</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: url("project images/login.jpg.jpg") no-repeat center
+          center/cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .container {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 15px;
+        width: 100%;
+        max-width: 400px;
+        color: black;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .logo {
+        text-align: center;
+        color: #008080;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .tagline {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #333;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #008080;
+      }
+      .form-row {
+        display: flex;
+        gap: 15px;
+      }
+      .form-group {
+        flex: 1;
+      }
+      .signup-btn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background: #008080;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .signup-btn:hover {
+        background: #006666;
+      }
+      .signup-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+      .otp-section {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+      }
+      .otp-input {
+        text-align: center;
+        font-size: 18px;
+        letter-spacing: 5px;
+        font-weight: bold;
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+      }
+      .resend-otp {
+        color: #008080;
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 14px;
+        margin-top: 10px;
+        display: inline-block;
+      }
+      .resend-otp.disabled {
+        color: #ccc;
+        cursor: not-allowed;
+        text-decoration: none;
+      }
+      .timer {
+        color: #666;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .popup {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      .popup h3 {
+        margin-bottom: 15px;
+        font-size: 20px;
+      }
+      .popup p {
+        margin-bottom: 20px;
+        font-size: 15px;
+        color: #444;
+      }
+      .popup button {
+        background: #008080;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .popup button:hover {
+        background: #006666;
+      }
+      .popup .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #333;
+      }
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #008080;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .setup-notice {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        text-align: center;
+      }
+      .setup-notice strong {
+        color: #856404;
+      }
+      .setup-notice a {
+        color: #008080;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">TravelMate</div>
+      <div class="tagline">Join the Travel Revolution</div>
+
+      <div class="setup-notice" id="setupNotice">
+        <strong>⚠️ Setup Required:</strong> Configure EmailJS to enable real
+        OTP.<br />
+        <a href="#" onclick="showSetupInstructions(); return false;"
+          >Click here for instructions</a
+        >
+      </div>
+
+      <h2>Create Account</h2>
+      <form id="signupForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" required />
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" required />
+          </div>
+        </div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email" required />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" required />
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" required>
+              <option value="">Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" required />
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" required />
+          </div>
+        </div>
+        <label for="username">Username</label>
+        <input type="text" id="username" required />
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" required />
+        <button type="submit" class="signup-btn" id="signupBtn">
+          Send OTP
+        </button>
+      </form>
+
+      <div class="otp-section" id="otpSection">
+        <h3 style="text-align: center; color: #008080">Verify Your Email</h3>
+        <p style="text-align: center; font-size: 14px">
+          OTP sent to <strong id="maskedEmail"></strong>
+        </p>
+        <input
+          type="text"
+          id="otpInput"
+          class="otp-input"
+          placeholder="Enter 6-digit OTP"
+          maxlength="6"
+        />
+        <div style="text-align: center; margin-top: 15px">
+          <button type="button" class="signup-btn" onclick="verifyOTP()">
+            Verify & Create Account
+          </button>
+        </div>
+        <div style="text-align: center; margin-top: 10px">
+          <span class="resend-otp" id="resendBtn" onclick="resendOTP()"
+            >Resend OTP</span
+          >
+          <div class="timer" id="timer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      const EMAILJS_CONFIG = {
+        publicKey: "czGnUkH-UcDKaJZS7",
+        serviceId: "service_ymbzkeq",
+        templateId: "template_3loojjr",
+      };
+
+      const isConfigured = !EMAILJS_CONFIG.publicKey.includes("YOUR_");
+
+      if (isConfigured) {
+        emailjs.init(EMAILJS_CONFIG.publicKey);
+        document.getElementById("setupNotice").style.display = "none";
+      }
+
+      let generatedOTP = "";
+      let formData = {};
+      let resendTimer = null;
+      let resendCountdown = 60;
+
+      function createPopup(title, message, isError = false) {
+        const overlay = document.createElement("div");
+        overlay.className = "popup-overlay";
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+          <button class="close-btn">&times;</button>
+          <h3 style="color: ${isError ? "#c62828" : "#008080"}">${title}</h3>
+          <p>${message}</p>
+          <button class="ok-btn">OK</button>
+        `;
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+        popup
+          .querySelector(".ok-btn")
+          .addEventListener("click", () => overlay.remove());
+        popup
+          .querySelector(".close-btn")
+          .addEventListener("click", () => overlay.remove());
+      }
+
+      function maskEmail(email) {
+        const [username, domain] = email.split("@");
+        const masked =
+          username.substring(0, 2) +
+          "*".repeat(Math.max(username.length - 2, 3));
+        return masked + "@" + domain;
+      }
+
+      function showSetupInstructions() {
+        const instructions = `
+          <strong>Setup EmailJS (5 minutes):</strong><br><br>
+          1. Go to <a href="https://www.emailjs.com" target="_blank">emailjs.com</a> and create FREE account<br>
+          2. Add Email Service (Gmail/Outlook)<br>
+          3. Create Email Template with these variables:<br>
+          &nbsp;&nbsp;- {{to_name}} - Recipient name<br>
+          &nbsp;&nbsp;- {{otp_code}} - The OTP code<br>
+          &nbsp;&nbsp;- {{to_email}} - Recipient email<br>
+          4. Copy your Public Key, Service ID, and Template ID<br>
+          5. Paste them in the EMAILJS_CONFIG section of the code<br><br>
+          <strong>Template Example:</strong><br>
+          Subject: Your TravelMate OTP Code<br>
+          Body: Hi {{to_name}}, Your OTP is: {{otp_code}}
+        `;
+        createPopup("Setup Instructions", instructions);
+      }
+
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          formData = {
+            firstname: document.getElementById("firstname").value.trim(),
+            lastname: document.getElementById("lastname").value.trim(),
+            email: document.getElementById("email").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            gender: document.getElementById("gender").value,
+            dob: document.getElementById("dob").value,
+            city: document.getElementById("city").value.trim(),
+            username: document.getElementById("username").value.trim(),
+            password: document.getElementById("password").value,
+            confirmPassword: document.getElementById("confirmPassword").value,
+          };
+
+          if (formData.password !== formData.confirmPassword) {
+            createPopup("Error", "Passwords do not match", true);
+            return;
+          }
+
+          if (formData.password.length < 6) {
+            createPopup(
+              "Error",
+              "Password must be at least 6 characters",
+              true
+            );
+            return;
+          }
+
+          const existingUsers = JSON.parse(
+            localStorage.getItem("travelmate_users") || "[]"
+          );
+          const userExists = existingUsers.find(
+            (u) =>
+              u.email === formData.email || u.username === formData.username
+          );
+          if (userExists) {
+            createPopup(
+              "Error",
+              userExists.email === formData.email
+                ? "Email already registered"
+                : "Username already taken",
+              true
+            );
+            return;
+          }
+
+          sendOTP();
+        });
+
+      function sendOTP() {
+        const btn = document.getElementById("signupBtn");
+        const originalText = btn.innerHTML;
+
+        generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log("Generated OTP:", generatedOTP);
+
+        if (!isConfigured) {
+          document.getElementById("otpSection").style.display = "block";
+          document.getElementById("maskedEmail").textContent = maskEmail(
+            formData.email
+          );
+          btn.textContent = "OTP Sent (Demo)";
+          btn.disabled = true;
+          createPopup(
+            "Demo Mode",
+            `Your OTP is: ${generatedOTP}\n\n(Configure EmailJS to send real emails)`
+          );
+          startResendTimer();
+          return;
+        }
+
+        btn.innerHTML = 'Sending OTP <span class="loader"></span>';
+        btn.disabled = true;
+
+        const templateParams = {
+          to_name: formData.firstname,
+          otp_code: generatedOTP,
+          email: formData.email,
+        };
+
+        emailjs
+          .send(
+            EMAILJS_CONFIG.serviceId,
+            EMAILJS_CONFIG.templateId,
+            templateParams
+          )
+          .then(
+            function (response) {
+              console.log("Email sent successfully!", response.status);
+              document.getElementById("otpSection").style.display = "block";
+              document.getElementById("maskedEmail").textContent = maskEmail(
+                formData.email
+              );
+              btn.textContent = "OTP Sent ✓";
+              createPopup("Success", "OTP sent to your email!");
+              startResendTimer();
+            },
+            function (error) {
+              console.error("Failed to send email:", error);
+              btn.innerHTML = originalText;
+              btn.disabled = false;
+              createPopup(
+                "Error",
+                "Failed to send OTP. Please check EmailJS configuration or try demo mode.",
+                true
+              );
+            }
+          );
+      }
+
+      function verifyOTP() {
+        const entered = document.getElementById("otpInput").value.trim();
+
+        if (!entered) {
+          createPopup("Error", "Please enter the OTP", true);
+          return;
+        }
+
+        if (entered.length !== 6) {
+          createPopup("Error", "OTP must be 6 digits", true);
+          return;
+        }
+
+        if (entered !== generatedOTP) {
+          createPopup("Error", "Invalid OTP. Please try again.", true);
+          return;
+        }
+
+        createAccount();
+      }
+
+      function createAccount() {
+        const existingUsers = JSON.parse(
+          localStorage.getItem("travelmate_users") || "[]"
+        );
+
+        const newUser = {
+          id: Date.now(),
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          fullname: `${formData.firstname} ${formData.lastname}`,
+          email: formData.email,
+          phone: formData.phone,
+          gender: formData.gender,
+          dob: formData.dob,
+          city: formData.city,
+          username: formData.username,
+          password: formData.password,
+          createdAt: new Date().toISOString(),
+          isVerified: true,
+        };
+
+        existingUsers.push(newUser);
+        localStorage.setItem("travelmate_users", JSON.stringify(existingUsers));
+        localStorage.setItem(
+          "travelmate_current_user",
+          JSON.stringify(newUser)
+        );
+
+        createPopup(
+          "Success!",
+          `Welcome to TravelMate, ${formData.firstname}! 🎉`
+        );
+
+        setTimeout(() => {
+          window.location.href = "main.html";
+        }, 2000);
+      }
+
+      function resendOTP() {
+        const resendBtn = document.getElementById("resendBtn");
+
+        if (resendBtn.classList.contains("disabled")) {
+          return;
+        }
+
+        clearInterval(resendTimer);
+        sendOTP();
+      }
+
+      function startResendTimer() {
+        const resendBtn = document.getElementById("resendBtn");
+        const timerDiv = document.getElementById("timer");
+
+        resendBtn.classList.add("disabled");
+        resendCountdown = 60;
+
+        resendTimer = setInterval(() => {
+          resendCountdown--;
+          timerDiv.textContent = `Resend available in ${resendCountdown}s`;
+
+          if (resendCountdown <= 0) {
+            clearInterval(resendTimer);
+            resendBtn.classList.remove("disabled");
+            timerDiv.textContent = "";
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

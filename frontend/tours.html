@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Smart Tour Planner</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: whitesmoke;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: rgba(0, 128, 128, 0.95);
+        backdrop-filter: blur(10px);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 25px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateX(-2px);
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px 20px;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-bar {
+        height: 6px;
+        background: #e9ecef;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #008080, #00a0a0);
+        transition: width 0.3s ease;
+        width: 16.66%;
+      }
+
+      .step-container {
+        padding: 40px;
+        min-height: 400px;
+      }
+
+      .step {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .step.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #008080;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .step-subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 16px;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 16px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #008080;
+        box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+      }
+
+      .option-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .option-card {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        position: relative;
+      }
+
+      .option-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .option-card.selected {
+        border-color: #008080;
+        background: rgba(0, 128, 128, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 128, 128, 0.2);
+      }
+
+      .option-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .option-title {
+        font-weight: bold;
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .option-subtitle {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+      }
+
+      .checkbox-item:hover {
+        border-color: #008080;
+      }
+
+      .checkbox-item.selected {
+        border-color: #008080;
+        background: rgba(0, 128, 128, 0.05);
+      }
+
+      .checkbox-item input {
+        width: auto;
+      }
+
+      .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid #e9ecef;
+      }
+
+      .btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #008080, #00a0a0);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 128, 128, 0.3);
+      }
+
+      .btn-primary:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #545b62;
+      }
+
+      .step-indicator {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .itinerary-container {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+      }
+
+      .day-item {
+        background: white;
+        margin: 15px 0;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #008080;
+      }
+
+      .budget-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .budget-item {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #e9ecef;
+      }
+
+      .budget-amount {
+        font-size: 24px;
+        font-weight: bold;
+        color: #008080;
+        margin-top: 10px;
+      }
+
+      .total-budget {
+        background: linear-gradient(135deg, #008080, #00a0a0);
+        color: white;
+      }
+
+      .total-budget .budget-amount {
+        color: white;
+      }
+
+      .ai-response {
+        animation: slideIn 0.5s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border: 1px solid #f5c6cb;
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        border: 1px solid #c3e6cb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Smart Tour Planner</h1>
+      <p>Let AI create your perfect trip step by step</p>
+    </div>
+
+    <div class="container">
+      <div class="form-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="step-container">
+          <div class="step active" id="step1">
+            <div class="step-indicator">Step 1 of 6</div>
+            <div class="step-title">Where would you like to go?</div>
+            <div class="step-subtitle">Choose your dream destination</div>
+
+            <div class="form-group">
+              <label for="destination">Destination</label>
+              <input
+                type="text"
+                id="destination"
+                placeholder="e.g., Goa, Kerala, Rajasthan, etc."
+                list="destinations"
+              />
+              <datalist id="destinations">
+                <option value="Goa"></option>
+                <option value="Kerala"></option>
+                <option value="Rajasthan"></option>
+                <option value="Himachal Pradesh"></option>
+                <option value="Kashmir"></option>
+                <option value="Andaman"></option>
+                <option value="Ladakh"></option>
+                <option value="Tamil Nadu"></option>
+                <option value="Karnataka"></option>
+                <option value="Uttarakhand"></option>
+              </datalist>
+            </div>
+
+            <div class="form-group">
+              <label for="startDate">Departure Date</label>
+              <input type="date" id="startDate" />
+            </div>
+          </div>
+
+          <div class="step" id="step2">
+            <div class="step-indicator">Step 2 of 6</div>
+            <div class="step-title">How would you like to travel?</div>
+            <div class="step-subtitle">
+              Choose your preferred mode of transport
+            </div>
+
+            <div class="option-grid">
+              <div class="option-card" onclick="selectTransport('flight')">
+                <div class="option-title">Flight</div>
+                <div class="option-subtitle">Fast & Comfortable</div>
+              </div>
+              <div class="option-card" onclick="selectTransport('train')">
+                <div class="option-title">Train</div>
+                <div class="option-subtitle">Scenic & Economic</div>
+              </div>
+              <div class="option-card" onclick="selectTransport('bus')">
+                <div class="option-title">Bus</div>
+                <div class="option-subtitle">Budget Friendly</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step" id="step3">
+            <div class="step-indicator">Step 3 of 6</div>
+            <div class="step-title">Where would you like to stay?</div>
+            <div class="step-subtitle">
+              Select your accommodation preference
+            </div>
+
+            <div class="option-grid">
+              <div class="option-card" onclick="selectAccommodation('5star')">
+                <span class="option-icon">⭐⭐⭐⭐⭐</span>
+                <div class="option-title">5 Star Hotel</div>
+                <div class="option-subtitle">Luxury Experience</div>
+              </div>
+              <div class="option-card" onclick="selectAccommodation('4star')">
+                <span class="option-icon">⭐⭐⭐⭐</span>
+                <div class="option-title">4 Star Hotel</div>
+                <div class="option-subtitle">Premium Comfort</div>
+              </div>
+              <div class="option-card" onclick="selectAccommodation('3star')">
+                <span class="option-icon">⭐⭐⭐</span>
+                <div class="option-title">3 Star Hotel</div>
+                <div class="option-subtitle">Good Value</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step" id="step4">
+            <div class="step-indicator">Step 4 of 6</div>
+            <div class="step-title">🍽️ What meals would you like included?</div>
+            <div class="step-subtitle">Select your meal preferences</div>
+
+            <div class="checkbox-group">
+              <div class="checkbox-item" onclick="toggleMeal('breakfast')">
+                <input type="checkbox" id="breakfast" name="meals" />
+                <div>
+                  <div class="option-title">🌅 Breakfast</div>
+                  <div class="option-subtitle">Start your day right</div>
+                </div>
+              </div>
+              <div class="checkbox-item" onclick="toggleMeal('lunch')">
+                <input type="checkbox" id="lunch" name="meals" />
+                <div>
+                  <div class="option-title">🌞 Lunch</div>
+                  <div class="option-subtitle">Midday energy</div>
+                </div>
+              </div>
+              <div class="checkbox-item" onclick="toggleMeal('dinner')">
+                <input type="checkbox" id="dinner" name="meals" />
+                <div>
+                  <div class="option-title">🌙 Dinner</div>
+                  <div class="option-subtitle">Evening delight</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step" id="step5">
+            <div class="step-indicator">Step 5 of 6</div>
+            <div class="step-title">📅 How many days?</div>
+            <div class="step-subtitle">Choose the duration of your trip</div>
+
+            <div class="form-group">
+              <label for="duration">Number of Days</label>
+              <select id="duration">
+                <option value="">Select duration</option>
+                <option value="2">2 Days (Weekend)</option>
+                <option value="3">3 Days</option>
+                <option value="4">4 Days</option>
+                <option value="5">5 Days</option>
+                <option value="7">1 Week</option>
+                <option value="10">10 Days</option>
+                <option value="14">2 Weeks</option>
+                <option value="21">3 Weeks</option>
+                <option value="30">1 Month</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="travelers">Number of Travelers</label>
+              <select id="travelers">
+                <option value="1">1 Person</option>
+                <option value="2">2 People</option>
+                <option value="3">3 People</option>
+                <option value="4">4 People</option>
+                <option value="5">5 People</option>
+                <option value="6">6+ People</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="step" id="step6">
+            <div class="step-indicator">Step 6 of 6</div>
+            <div class="step-title">🎉 Your Perfect Trip Plan</div>
+            <div class="step-subtitle">
+              Here's your personalized itinerary and budget
+            </div>
+
+            <div class="itinerary-container">
+              <h3 style="color: #008080; margin-top: 0">
+                📋 Detailed Itinerary
+              </h3>
+              <div id="itineraryDetails"></div>
+            </div>
+
+            <div class="itinerary-container">
+              <h3 style="color: #008080; margin-top: 0">
+                💰 Smart Budget Breakdown
+              </h3>
+              <div class="budget-summary" id="budgetSummary"></div>
+            </div>
+          </div>
+
+          <div class="navigation-buttons">
+            <button
+              class="btn btn-secondary"
+              id="prevBtn"
+              onclick="changeStep(-1)"
+            >
+              ← Previous
+            </button>
+            <button
+              class="btn btn-primary"
+              id="nextBtn"
+              onclick="changeStep(1)"
+            >
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentStep = 1;
+      const totalSteps = 6;
+      const API_BASE_URL = "http://localhost:5000";
+
+      const formData = {
+        destination: "",
+        startDate: "",
+        transport: "",
+        accommodation: "",
+        meals: [],
+        duration: 0,
+        travelers: 1,
+      };
+
+      function updateProgress() {
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById("progressFill").style.width = progress + "%";
+      }
+
+      function showStep(step) {
+        document
+          .querySelectorAll(".step")
+          .forEach((s) => s.classList.remove("active"));
+
+        document.getElementById(`step${step}`).classList.add("active");
+
+        document.getElementById("prevBtn").style.display =
+          step === 1 ? "none" : "flex";
+        document.getElementById("nextBtn").textContent =
+          step === totalSteps ? "Book Trip 🎉" : "Next →";
+
+        updateProgress();
+      }
+
+      function changeStep(direction) {
+        if (direction === 1) {
+          if (!validateCurrentStep()) return;
+
+          if (currentStep === totalSteps) {
+            bookTrip();
+            return;
+          }
+
+          if (currentStep === totalSteps - 1) {
+            generateItinerary();
+          }
+        }
+
+        currentStep += direction;
+        if (currentStep < 1) currentStep = 1;
+        if (currentStep > totalSteps) currentStep = totalSteps;
+
+        showStep(currentStep);
+      }
+
+      function validateCurrentStep() {
+        switch (currentStep) {
+          case 1:
+            if (
+              !document.getElementById("destination").value ||
+              !document.getElementById("startDate").value
+            ) {
+              showError("Please fill in destination and departure date");
+              return false;
+            }
+            formData.destination = document.getElementById("destination").value;
+            formData.startDate = document.getElementById("startDate").value;
+            break;
+          case 2:
+            if (!formData.transport) {
+              showError("Please select a mode of transport");
+              return false;
+            }
+            break;
+          case 3:
+            if (!formData.accommodation) {
+              showError("Please select accommodation type");
+              return false;
+            }
+            break;
+          case 4:
+            formData.meals = Array.from(
+              document.querySelectorAll('input[name="meals"]:checked')
+            ).map((cb) => cb.id);
+            break;
+          case 5:
+            if (!document.getElementById("duration").value) {
+              showError("Please select trip duration");
+              return false;
+            }
+            formData.duration = parseInt(
+              document.getElementById("duration").value
+            );
+            formData.travelers = parseInt(
+              document.getElementById("travelers").value
+            );
+            break;
+        }
+        return true;
+      }
+
+      function selectTransport(transport) {
+        document.querySelectorAll("#step2 .option-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+        event.currentTarget.classList.add("selected");
+        formData.transport = transport;
+      }
+
+      function selectAccommodation(accommodation) {
+        document.querySelectorAll("#step3 .option-card").forEach((card) => {
+          card.classList.remove("selected");
+        });
+        event.currentTarget.classList.add("selected");
+        formData.accommodation = accommodation;
+      }
+
+      function toggleMeal(meal) {
+        const checkbox = document.getElementById(meal);
+        const item = event.currentTarget;
+
+        checkbox.checked = !checkbox.checked;
+
+        if (checkbox.checked) {
+          item.classList.add("selected");
+        } else {
+          item.classList.remove("selected");
+        }
+      }
+
+      function showError(message) {
+      
+        const existingError = document.querySelector(".error-message");
+        if (existingError) {
+          existingError.remove();
+        }
+
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-message";
+        errorDiv.textContent = message;
+
+        const currentStepDiv = document.querySelector(".step.active");
+        currentStepDiv.insertBefore(errorDiv, currentStepDiv.firstChild);
+
+        setTimeout(() => {
+          if (errorDiv.parentNode) {
+            errorDiv.remove();
+          }
+        }, 5000);
+      }
+
+      function showSuccess(message) {
+        const successDiv = document.createElement("div");
+        successDiv.className = "success-message";
+        successDiv.textContent = message;
+
+        const currentStepDiv = document.querySelector(".step.active");
+        currentStepDiv.insertBefore(successDiv, currentStepDiv.firstChild);
+
+        setTimeout(() => {
+          if (successDiv.parentNode) {
+            successDiv.remove();
+          }
+        }, 5000);
+      }
+
+      async function callAPI(endpoint, data) {
+        try {
+          const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          return result;
+        } catch (error) {
+          console.error("API call failed:", error);
+          throw error;
+        }
+      }
+
+      async function generateItinerary() {
+        const itineraryContainer = document.getElementById("itineraryDetails");
+        const budgetContainer = document.getElementById("budgetSummary");
+        const nextBtn = document.getElementById("nextBtn");
+
+        nextBtn.disabled = true;
+        nextBtn.textContent = "Generating...";
+
+        itineraryContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">🤖</div>
+            <h3 style="color: #008080;">AI is crafting your perfect itinerary...</h3>
+            <p style="color: #666;">This may take a few moments</p>
+            <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #008080; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px;"></div>
+          </div>
+        `;
+
+        budgetContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">💰</div>
+            <h3 style="color: #008080;">Calculating smart budget...</h3>
+            <p style="color: #666;">Analyzing best prices and options</p>
+            <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #008080; border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px;"></div>
+          </div>
+        `;
+
+        try {
+          const itineraryPrompt = createItineraryPrompt();
+          const budgetPrompt = createBudgetPrompt();
+
+          const [itineraryResult, budgetResult] = await Promise.all([
+            callAPI("/api/generate-itinerary", { prompt: itineraryPrompt }),
+            callAPI("/api/generate-budget", { prompt: budgetPrompt }),
+          ]);
+
+          itineraryContainer.innerHTML = `
+            <div class="ai-response">
+              <div style="background: rgba(0,128,128,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <strong>🤖 AI Travel Assistant:</strong> "I've created a personalized itinerary based on your preferences!"
+              </div>
+              ${formatItineraryResponse(itineraryResult.response)}
+            </div>
+          `;
+
+          budgetContainer.innerHTML = `
+            <div class="ai-response">
+              <div style="background: rgba(0,128,128,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <strong>💰 Smart Budget Analyzer:</strong> "Here's your optimized budget breakdown!"
+              </div>
+              ${formatBudgetResponse(budgetResult.response)}
+            </div>
+          `;
+
+          showSuccess(
+            "AI has successfully generated your personalized trip plan!"
+          );
+        } catch (error) {
+          console.error("Error generating AI content:", error);
+          showError(
+            "Failed to generate AI content. Please check if the backend server is running."
+          );
+
+          generateFallbackContent();
+        } finally {
+          nextBtn.disabled = false;
+          nextBtn.textContent = "Book Trip 🎉";
+        }
+      }
+
+      function createItineraryPrompt() {
+        return `Create a detailed ${formData.duration}-day itinerary for ${
+          formData.travelers
+        } traveler(s) visiting ${formData.destination}. 
+        
+        Travel preferences:
+        - Transport: ${formData.transport}
+        - Accommodation: ${formData.accommodation.replace(
+          "star",
+          " star"
+        )} hotel
+        - Meals included: ${formData.meals.join(", ") || "None specified"}
+        - Start date: ${formData.startDate}
+        - Number of travelers: ${formData.travelers}
+        
+        Please provide a day-by-day breakdown with morning, afternoon, and evening activities. Include specific attractions, local experiences, and practical tips. Make it engaging and personalized.`;
+      }
+
+      function createBudgetPrompt() {
+        return `Create a detailed budget breakdown for a ${
+          formData.duration
+        }-day trip to ${formData.destination} for ${
+          formData.travelers
+        } traveler(s).
+        
+        Trip details:
+        - Transport: ${formData.transport}
+        - Accommodation: ${formData.accommodation.replace(
+          "star",
+          " star"
+        )} hotel
+        - Meals: ${formData.meals.join(", ") || "Not included"}
+        - Duration: ${formData.duration} days
+        - Number of travelers: ${formData.travelers}
+        
+        Please provide realistic costs in Indian Rupees (₹) for:
+        1. Transport (round trip)
+        2. Accommodation (per night × duration)
+        3. Meals (if selected)
+        4. Local transport and activities
+        5. Miscellaneous expenses
+        
+        Include money-saving tips and alternatives for different budget ranges.`;
+      }
+
+      function formatItineraryResponse(aiResponse) {
+        const lines = aiResponse.split("\n");
+        let formattedHTML = "";
+        let currentDay = "";
+        let currentContent = "";
+
+        lines.forEach((line) => {
+          const trimmedLine = line.trim();
+          if (trimmedLine.match(/^Day \d+/i)) {
+            if (currentDay && currentContent) {
+              formattedHTML += `
+                <div class="day-item">
+                  <h4 style="color: #008080; margin: 0 0 10px 0;">${currentDay}</h4>
+                  <div style="line-height: 1.6;">${currentContent}</div>
+                </div>
+              `;
+            }
+        
+            currentDay = trimmedLine;
+            currentContent = "";
+          } else if (trimmedLine) {
+            currentContent += (currentContent ? "<br>" : "") + trimmedLine;
+          }
+        });
+
+        if (currentDay && currentContent) {
+          formattedHTML += `
+            <div class="day-item">
+              <h4 style="color: #008080; margin: 0 0 10px 0;">${currentDay}</h4>
+              <div style="line-height: 1.6;">${currentContent}</div>
+            </div>
+          `;
+        }
+
+        // If no days were found, show the entire response
+        if (!formattedHTML) {
+          formattedHTML = `
+            <div class="day-item">
+              <div style="white-space: pre-line; line-height: 1.6;">${aiResponse}</div>
+            </div>
+          `;
+        }
+
+        return formattedHTML;
+      }
+
+      function formatBudgetResponse(aiResponse) {
+        const lines = aiResponse.split("\n");
+        let budgetHTML = '<div style="line-height: 1.8;">';
+
+        lines.forEach((line) => {
+          const trimmedLine = line.trim();
+          if (trimmedLine) {
+            if (trimmedLine.includes("₹") || trimmedLine.includes("Rs")) {
+              budgetHTML += `<div style="background: rgba(0,128,128,0.05); padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #008080;"><strong>${trimmedLine}</strong></div>`;
+            } else if (trimmedLine.match(/^\d+\./)) {
+              // Numbered points
+              budgetHTML += `<div style="margin: 10px 0; padding: 5px 0;"><strong>${trimmedLine}</strong></div>`;
+            } else if (
+              trimmedLine.includes("**") ||
+              trimmedLine.includes("*")
+            ) {
+              const formatted = trimmedLine
+                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                .replace(/\*(.*?)\*/g, "<em>$1</em>");
+              budgetHTML += `<div style="margin: 5px 0;">${formatted}</div>`;
+            } else {
+              budgetHTML += `<div style="margin: 5px 0;">${trimmedLine}</div>`;
+            }
+          }
+        });
+
+        budgetHTML += "</div>";
+        return budgetHTML;
+      }
+
+      function generateFallbackContent() {
+        const itineraryContainer = document.getElementById("itineraryDetails");
+        const budgetContainer = document.getElementById("budgetSummary");
+
+        let itineraryHTML = "";
+        for (let i = 1; i <= formData.duration; i++) {
+          itineraryHTML += `
+            <div class="day-item">
+              <h4 style="color: #008080; margin: 0 0 10px 0;">Day ${i}</h4>
+              <p style="margin: 5px 0;"><strong>Morning:</strong> ${getActivityForDay(
+                i,
+                "morning"
+              )}</p>
+              <p style="margin: 5px 0;"><strong>Afternoon:</strong> ${getActivityForDay(
+                i,
+                "afternoon"
+              )}</p>
+              <p style="margin: 5px 0;"><strong>Evening:</strong> ${getActivityForDay(
+                i,
+                "evening"
+              )}</p>
+            </div>
+          `;
+        }
+        itineraryContainer.innerHTML = itineraryHTML;
+
+        const budget = calculateBudget();
+        budgetContainer.innerHTML = `
+          <div class="budget-item">
+            <div>🚆 Transport</div>
+            <div class="budget-amount">₹${budget.transport.toLocaleString()}</div>
+          </div>
+          <div class="budget-item">
+            <div>🏨 Accommodation</div>
+            <div class="budget-amount">₹${budget.accommodation.toLocaleString()}</div>
+          </div>
+          <div class="budget-item">
+            <div>🍽️ Meals</div>
+            <div class="budget-amount">₹${budget.meals.toLocaleString()}</div>
+          </div>
+          <div class="budget-item">
+            <div>🎯 Activities</div>
+            <div class="budget-amount">₹${budget.activities.toLocaleString()}</div>
+          </div>
+          <div class="budget-item total-budget">
+            <div>💰 Total Budget</div>
+            <div class="budget-amount">₹${budget.total.toLocaleString()}</div>
+            <div style="font-size: 14px; margin-top: 5px;">for ${
+              formData.travelers
+            } traveler(s)</div>
+          </div>
+        `;
+      }
+
+      function getActivityForDay(day, time) {
+        const activities = {
+          1: {
+            morning: `Arrival and check-in to ${formData.accommodation.replace(
+              "star",
+              " star"
+            )} hotel`,
+            afternoon: `Local sightseeing and ${formData.destination} orientation tour`,
+            evening: `Welcome dinner and rest`,
+          },
+          2: {
+            morning: `Visit top attractions in ${formData.destination}`,
+            afternoon: `Local cuisine experience and shopping`,
+            evening: `Cultural show or local entertainment`,
+          },
+        };
+
+        const genericActivities = {
+          morning: [
+            `Adventure activities`,
+            `Temple/monument visits`,
+            `Nature walks`,
+            `Local markets`,
+          ],
+          afternoon: [
+            `Sightseeing tours`,
+            `Local experiences`,
+            `Adventure sports`,
+            `Cultural activities`,
+          ],
+          evening: [
+            `Sunset viewing`,
+            `Local entertainment`,
+            `Relaxation time`,
+            `Night markets`,
+          ],
+        };
+
+        if (activities[day]) {
+          return activities[day][time];
+        } else {
+          const random =
+            genericActivities[time][
+              Math.floor(Math.random() * genericActivities[time].length)
+            ];
+          return `${random} in ${formData.destination}`;
+        }
+      }
+
+      function calculateBudget() {
+        const baseCosts = {
+          transport: {
+            flight: { base: 8000, multiplier: 1.5 },
+            train: { base: 2000, multiplier: 1.0 },
+            bus: { base: 1200, multiplier: 0.8 },
+          },
+          accommodation: {
+            "5star": 8000,
+            "4star": 5000,
+            "3star": 3000,
+          },
+          meals: {
+            breakfast: 500,
+            lunch: 800,
+            dinner: 1200,
+          },
+        };
+
+        const transportCost = Math.round(
+          baseCosts.transport[formData.transport].base *
+            baseCosts.transport[formData.transport].multiplier *
+            formData.travelers
+        );
+
+        const accommodationCost =
+          baseCosts.accommodation[formData.accommodation] *
+          formData.duration *
+          formData.travelers;
+
+        let mealsPerDay = 0;
+        formData.meals.forEach((meal) => {
+          mealsPerDay += baseCosts.meals[meal] || 0;
+        });
+        const mealsCost = mealsPerDay * formData.duration * formData.travelers;
+
+        const activitiesCost = 2000 * formData.duration * formData.travelers;
+
+        const total =
+          transportCost + accommodationCost + mealsCost + activitiesCost;
+
+        return {
+          transport: transportCost,
+          accommodation: accommodationCost,
+          meals: mealsCost,
+          activities: activitiesCost,
+          total: total,
+        };
+      }
+
+      function bookTrip() {
+        const budget = calculateBudget();
+        const bookingId = `TRIP${Date.now()}`;
+
+        alert(
+          `🎉 Trip Booked Successfully!\n\nBooking ID: ${bookingId}\nDestination: ${
+            formData.destination
+          }\nDuration: ${
+            formData.duration
+          } days\nTotal Cost: ₹${budget.total.toLocaleString()}\n\nYour detailed itinerary has been sent to your email. Have a wonderful trip!`
+        );
+      }
+
+      async function testBackendConnection() {
+        try {
+          const response = await fetch(`${API_BASE_URL}/health`);
+          if (response.ok) {
+            console.log("✅ Backend connection successful");
+          } else {
+            console.warn("⚠️ Backend responded but with error status");
+          }
+        } catch (error) {
+          console.error("❌ Backend connection failed:", error);
+          console.log("Make sure to start the Flask server first!");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        showStep(1);
+
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("startDate").min = today;
+
+        testBackendConnection();
+      });
+    </script>
+  </body>
+</html>

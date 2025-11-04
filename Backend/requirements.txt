@@ -1,0 +1,6 @@
+flask==2.3.3
+flask-cors==4.0.0
+langchain-ollama==0.1.0
+langchain-core==0.1.52
+ollama==0.1.7
+python-dotenv==1.0.0

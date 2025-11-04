@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Travel Insurance</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .insurance-info {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .bookings-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .booking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+      }
+
+      .booking-item:hover {
+        border-color: #008080;
+        box-shadow: 0 2px 8px rgba(0, 128, 128, 0.1);
+      }
+
+      .booking-info h4 {
+        margin: 0 0 5px 0;
+        color: #008080;
+        font-size: 18px;
+      }
+
+      .booking-info p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .insurance-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .insurance-btn:hover {
+        background: #218838;
+      }
+
+      .insurance-btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .insurance-plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+
+      .plan-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+
+      .plan-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .plan-header {
+        background: linear-gradient(45deg, #008080, #00a0a0);
+        color: white;
+        padding: 25px;
+        text-align: center;
+      }
+
+      .plan-name {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .plan-price {
+        font-size: 32px;
+        font-weight: bold;
+      }
+
+      .plan-price-per {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .plan-body {
+        padding: 25px;
+      }
+
+      .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 25px 0;
+      }
+
+      .plan-features li {
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .plan-features li:last-child {
+        border-bottom: none;
+      }
+
+      .feature-icon {
+        color: #28a745;
+        font-weight: bold;
+      }
+
+      .select-plan-btn {
+        width: 100%;
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .select-plan-btn:hover {
+        background: #006666;
+      }
+
+      .no-bookings {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .no-bookings h3 {
+        color: #008080;
+        margin-bottom: 15px;
+      }
+      .plan-card {
+        position: relative;
+      }
+
+      @media (max-width: 768px) {
+        .booking-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+
+        .insurance-plans {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Travel Insurance</h1>
+      <p>Protect your journey with comprehensive travel insurance coverage</p>
+    </div>
+
+    <div class="container">
+      <div class="insurance-info">
+        <h2 style="color: #008080; margin-bottom: 20px">
+          Why Travel Insurance?
+        </h2>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+          "
+        >
+          <div style="text-align: center; padding: 20px">
+            <div style="font-size: 40px; margin-bottom: 15px">🏥</div>
+            <h4 style="color: #333; margin-bottom: 10px">Medical Coverage</h4>
+          </div>
+          <div style="text-align: center; padding: 20px">
+            <div style="font-size: 40px; margin-bottom: 15px">✈️</div>
+            <h4 style="color: #333; margin-bottom: 10px">Trip Protection</h4>
+          </div>
+          <div style="text-align: center; padding: 20px">
+            <div style="font-size: 40px; margin-bottom: 15px">🧳</div>
+            <h4 style="color: #333; margin-bottom: 10px">Baggage Protection</h4>
+          </div>
+          <div style="text-align: center; padding: 20px">
+            <div style="font-size: 40px; margin-bottom: 15px">📞</div>
+            <h4 style="color: #333; margin-bottom: 10px">24/7 Assistance</h4>
+          </div>
+        </div>
+      </div>
+
+      <div class="bookings-section">
+        <h3 style="color: #008080; margin-bottom: 20px">
+          Your Current Bookings
+        </h3>
+        <div id="bookings-list">
+        
+        </div>
+      </div>
+
+      <div
+        style="
+          background: white;
+          padding: 30px;
+          border-radius: 15px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <h3 style="color: #008080; margin-bottom: 25px; text-align: center">
+          Choose Your Insurance Plan
+        </h3>
+
+        <div class="insurance-plans">
+          <div class="plan-card">
+            <div class="plan-header">
+              <div class="plan-name">Basic Protection</div>
+              <div class="plan-price">₹299</div>
+              <div class="plan-price-per">per person per trip</div>
+            </div>
+            <div class="plan-body">
+              <ul class="plan-features">
+                <li>
+                  <span class="feature-icon">✓</span> Medical expenses up to
+                  ₹1,00,000
+                </li>
+                <li>
+                  <span class="feature-icon">✓</span> Trip cancellation up to
+                  ₹25,000
+                </li>
+                <li>
+                  <span class="feature-icon">✓</span> Baggage loss up to ₹15,000
+                </li>
+                <li>
+                  <span class="feature-icon">✓</span> Personal accident
+                  ₹2,00,000
+                </li>
+                <li><span class="feature-icon">✓</span> 24/7 assistance</li>
+              </ul>
+              <button
+                class="select-plan-btn"
+                onclick="selectInsurancePlan('Basic Protection', '₹299')"
+              >
+                Select Basic Plan
+              </button>
+            </div>
+          </div>
+
+        
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function loadUserBookings() {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+        const bookingsList = document.getElementById("bookings-list");
+
+        if (!user) {
+          bookingsList.innerHTML = `
+          <div class="no-bookings">
+            <h3>Please Login First</h3>
+            <p>You need to login to view your bookings and purchase travel insurance.</p>
+            <button class="insurance-btn" onclick="window.location.href='login.html'">
+              Login Now
+            </button>
+          </div>
+        `;
+          return;
+        }
+
+        const allBookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+        const userBookings = allBookings.filter(
+          (booking) => booking.userId === user.id
+        );
+
+        if (userBookings.length === 0) {
+          bookingsList.innerHTML = `
+          <div class="no-bookings">
+            <h3>No Active Bookings</h3>
+            <p>You don't have any current bookings. Make a booking first to purchase travel insurance.</p>
+            <button class="insurance-btn" onclick="window.location.href='main.html'">
+              Make a Booking
+            </button>
+          </div>
+        `;
+          return;
+        }
+
+        bookingsList.innerHTML = "";
+        userBookings.forEach((booking) => {
+          const bookingItem = document.createElement("div");
+          bookingItem.className = "booking-item";
+
+          const hasInsurance = checkIfHasInsurance(booking.id);
+
+          bookingItem.innerHTML = `
+          <div class="booking-info">
+            <h4>${booking.title}</h4>
+            <p><strong>Type:</strong> ${
+              booking.type.charAt(0).toUpperCase() + booking.type.slice(1)
+            } | 
+               <strong>Price:</strong> ${booking.price} | 
+               <strong>Booking ID:</strong> ${booking.id}</p>
+            <p><strong>Status:</strong> ${booking.status} | 
+               <strong>Date:</strong> ${new Date(
+                 booking.date
+               ).toLocaleDateString()}</p>
+          </div>
+          <div>
+            ${
+              hasInsurance
+                ? '<button class="insurance-btn" disabled>Insurance Added ✓</button>'
+                : `<button class="insurance-btn" onclick="addInsuranceToBooking('${booking.id}', '${booking.title}')">Add Insurance</button>`
+            }
+          </div>
+        `;
+
+          bookingsList.appendChild(bookingItem);
+        });
+      }
+
+      function checkIfHasInsurance(bookingId) {
+        const insurances = JSON.parse(
+          localStorage.getItem("travelmate_insurances") || "[]"
+        );
+        return insurances.some(
+          (insurance) => insurance.bookingId === bookingId
+        );
+      }
+
+      function addInsuranceToBooking(bookingId, bookingTitle) {
+       
+        document.querySelector(".insurance-plans").scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        
+        window.selectedBookingId = bookingId;
+        window.selectedBookingTitle = bookingTitle;
+
+      
+        const plansSection =
+          document.querySelector(".insurance-plans").parentElement;
+        plansSection.style.border = "3px solid #008080";
+        plansSection.style.animation = "pulse 2s";
+
+        setTimeout(() => {
+          plansSection.style.border = "none";
+          plansSection.style.animation = "none";
+        }, 3000);
+      }
+
+      function selectInsurancePlan(planName, price) {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+
+        if (!user) {
+          alert("Please login to purchase insurance");
+          window.location.href = "login.html";
+          return;
+        }
+
+        if (!window.selectedBookingId) {
+          alert(
+            'Please select a booking first by clicking "Add Insurance" next to your booking'
+          );
+          return;
+        }
+
+        const insuranceId = `INS${Date.now()}`;
+
+        
+        const insurances = JSON.parse(
+          localStorage.getItem("travelmate_insurances") || "[]"
+        );
+        const newInsurance = {
+          id: insuranceId,
+          bookingId: window.selectedBookingId,
+          bookingTitle: window.selectedBookingTitle,
+          planName: planName,
+          price: price,
+          userId: user.id,
+          purchaseDate: new Date().toISOString(),
+          status: "active",
+        };
+
+        insurances.push(newInsurance);
+        localStorage.setItem(
+          "travelmate_insurances",
+          JSON.stringify(insurances)
+        );
+
+      
+        showInsuranceConfirmation(newInsurance);
+
+       
+        loadUserBookings();
+
+        
+        window.selectedBookingId = null;
+        window.selectedBookingTitle = null;
+      }
+
+      function showInsuranceConfirmation(insurance) {
+        const modal = document.createElement("div");
+        modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 3000;
+      `;
+
+        modal.innerHTML = `
+        <div style="background: white; padding: 40px; border-radius: 15px; text-align: center; max-width: 500px; margin: 20px;">
+          
+          <h2 style="color: #28a745; margin-bottom: 15px;">Insurance Purchased Successfully!</h2>
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+            <p><strong>Insurance ID:</strong> ${insurance.id}</p>
+            <p><strong>Plan:</strong> ${insurance.planName}</p>
+            <p><strong>Coverage for:</strong> ${insurance.bookingTitle}</p>
+            <p><strong>Premium:</strong> ${insurance.price}</p>
+            <p><strong>Status:</strong> Active</p>
+          </div>
+          <p style="color: #666; font-size: 14px; margin: 20px 0;">
+            🎉 Your travel is now protected! Your insurance certificate and policy documents will be emailed to you shortly. Keep your insurance ID handy during travel.
+          </p>
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="color: #2e7d32; font-size: 14px; margin: 0;">
+              <strong>Emergency Helpline:</strong> +91-1800-XXX-XXXX<br>
+              <strong>Claim Support:</strong> claims@travelmate.com
+            </p>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  style="background: #008080; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 16px;">
+            Close
+          </button>
+        </div>
+      `;
+
+        document.body.appendChild(modal);
+
+       
+        setTimeout(() => {
+          if (modal.parentElement) {
+            modal.remove();
+          }
+        }, 10000);
+      }
+
+      const style = document.createElement("style");
+      style.textContent = `
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 128, 128, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(0, 128, 128, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 128, 128, 0); }
+      }
+    `;
+      document.head.appendChild(style);
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadUserBookings();
+      });
+    </script>
+  </body>
+</html>

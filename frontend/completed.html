@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Completed Trips</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .trips-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: #008080;
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .trip-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px;
+        border: 2px solid #f0f0f0;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+        background: #f8f9fa;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .trip-item::before {
+        content: "✓";
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #28a745;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .trip-item:hover {
+        border-color: #28a745;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .trip-info {
+        flex: 1;
+      }
+
+      .trip-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #28a745;
+        margin-bottom: 8px;
+      }
+
+      .trip-details {
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .trip-date {
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .trip-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .action-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+
+      .review-btn {
+        background: #ffc107;
+        color: #333;
+      }
+
+      .review-btn:hover {
+        background: #e0a800;
+      }
+
+      .download-btn {
+        background: #17a2b8;
+        color: white;
+      }
+
+      .download-btn:hover {
+        background: #138496;
+      }
+
+      .recap-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .recap-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(250, 250, 251, 0.4);
+      }
+
+      .no-trips {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .no-trips h3 {
+        color: #008080;
+        margin-bottom: 15px;
+        font-size: 24px;
+      }
+
+      .no-trips p {
+        margin-bottom: 30px;
+        font-size: 16px;
+      }
+
+      .book-now-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .book-now-btn:hover {
+        background: #006666;
+      }
+
+      .trip-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #28a745, #34ce57);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        margin-right: 20px;
+      }
+
+      .trip-main {
+        display: flex;
+        align-items: center;
+        flex: 1;
+      }
+
+      .rating {
+        display: flex;
+        gap: 2px;
+        margin-top: 8px;
+      }
+
+      .star {
+        color: #ffc107;
+        font-size: 16px;
+      }
+
+      .memories {
+        background: #e8f5e8;
+        border: 1px solid #c3e6c3;
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-top: 10px;
+        color: #2e7d32;
+        font-size: 14px;
+      }
+
+      .journey-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+
+      .journey-content {
+        position: relative;
+        max-width: 80%;
+        margin: auto;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .slide {
+        display: none;
+        text-align: center;
+        color: white;
+      }
+
+      .slide.active {
+        display: block;
+      }
+
+      .slide img {
+        max-width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+        border-radius: 10px;
+      }
+
+      .slide-caption {
+        padding: 20px;
+        font-size: 18px;
+        background: rgba(0, 0, 0, 0.7);
+        margin-top: 10px;
+        border-radius: 10px;
+      }
+
+      .close-journey {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close-journey:hover {
+        color: #667eea;
+      }
+
+      .prev,
+      .next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        margin-top: -22px;
+        padding: 16px;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        user-select: none;
+        border-radius: 5px;
+      }
+
+      .next {
+        right: 20px;
+      }
+
+      .prev {
+        left: 20px;
+      }
+
+      .prev:hover,
+      .next:hover {
+        background: rgba(102, 126, 234, 0.8);
+      }
+
+      .slide-counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        border-radius: 20px;
+      }
+
+      .upload-section {
+        text-align: center;
+        margin: 20px 0;
+        padding: 20px;
+        border: 2px dashed #667eea;
+        border-radius: 10px;
+        background: rgba(102, 126, 234, 0.1);
+      }
+
+      .upload-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 10px;
+      }
+
+      .image-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+        justify-content: center;
+      }
+
+      .image-preview img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #667eea;
+      }
+      .review-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .review-modal.show {
+        display: flex;
+      }
+
+      .review-modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      .review-modal-header {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .review-modal-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #008080;
+        margin-bottom: 10px;
+      }
+
+      .review-trip-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .rating-section {
+        margin-bottom: 20px;
+      }
+
+      .rating-label {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .star-rating {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+
+      .star-btn {
+        background: none;
+        border: none;
+        font-size: 30px;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+
+      .star-btn.active,
+      .star-btn:hover {
+        color: #ffc107;
+      }
+
+      .review-textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+
+      .review-textarea:focus {
+        outline: none;
+        border-color: #008080;
+      }
+
+      .review-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+
+      .review-submit-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .review-cancel-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .trip-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+
+        .trip-main {
+          width: 100%;
+        }
+
+        .trip-actions {
+          width: 100%;
+          justify-content: flex-end;
+        }
+
+        .stats-section {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Completed Trips</h1>
+      <p>Your travel memories and achievements</p>
+    </div>
+
+    <div class="container">
+      <div class="trips-section">
+        <div id="stats-container" class="stats-section"></div>
+
+        <h3 style="color: #008080; margin-bottom: 25px">Your Travel History</h3>
+        <div id="trips-container"></div>
+      </div>
+    </div>
+
+    <div id="journeyModal" class="journey-modal">
+      <div class="journey-content">
+        <span class="close-journey" onclick="closeJourneyRecap()">&times;</span>
+
+        <div id="uploadSection" class="upload-section">
+          <h3 id="tripTitle">Upload Your Journey Photos</h3>
+          <p>Share your memories from this amazing trip!</p>
+          <input
+            type="file"
+            id="imageUpload"
+            multiple
+            accept="image/*"
+            style="display: none"
+            onchange="handleImageUpload(event)"
+          />
+          <button
+            class="upload-btn"
+            onclick="document.getElementById('imageUpload').click()"
+          >
+            Upload Photos
+          </button>
+          <div id="imagePreview" class="image-preview"></div>
+          <button
+            class="upload-btn"
+            onclick="startSlideshow()"
+            id="startSlideshowBtn"
+            style="display: none"
+          >
+            ▶️ Start Slideshow
+          </button>
+        </div>
+
+        <div id="slideshowContainer" style="display: none">
+          <button class="prev" onclick="changeSlide(-1)">❮</button>
+          <button class="next" onclick="changeSlide(1)">❯</button>
+
+          <div id="slidesContainer"></div>
+
+          <div class="slide-counter">
+            <span id="slideCounter">1 / 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="review-modal" id="review-modal">
+      <div class="review-modal-content">
+        <div class="review-modal-header">
+          <div class="review-modal-title">Write a Review</div>
+          <div class="review-trip-info" id="review-trip-info"></div>
+        </div>
+
+        <div class="rating-section">
+          <div class="rating-label">Rate your experience:</div>
+          <div class="star-rating" id="star-rating">
+            <button class="star-btn" onclick="setRating(1)">★</button>
+            <button class="star-btn" onclick="setRating(2)">★</button>
+            <button class="star-btn" onclick="setRating(3)">★</button>
+            <button class="star-btn" onclick="setRating(4)">★</button>
+            <button class="star-btn" onclick="setRating(5)">★</button>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <div class="rating-label">Share your experience:</div>
+          <textarea
+            class="review-textarea"
+            id="review-textarea"
+            placeholder="Tell us about your trip... What did you like most? Any suggestions for improvement?"
+          ></textarea>
+        </div>
+
+        <div class="review-actions">
+          <button class="review-cancel-btn" onclick="closeReviewModal()">
+            Cancel
+          </button>
+          <button class="review-submit-btn" onclick="submitReview()">
+            Submit Review
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      let currentBookingForReview = null;
+      let selectedRating = 0;
+      let currentSlide = 0;
+      let uploadedImages = [];
+      let currentTrip = "";
+
+      function loadCompletedTrips() {
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "null"
+        );
+        const tripsContainer = document.getElementById("trips-container");
+        const statsContainer = document.getElementById("stats-container");
+
+        if (!user) {
+          tripsContainer.innerHTML = `
+          <div class="no-trips">
+            <h3>Please Login First</h3>
+            <p>You need to login to view your completed trips.</p>
+            <a href="login.html" class="book-now-btn">Login Now</a>
+          </div>
+        `;
+          return;
+        }
+
+        const bookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+        const userBookings = bookings.filter(
+          (booking) =>
+            booking.userId === user.id && booking.status === "confirmed"
+        );
+
+        loadTravelStats(userBookings, statsContainer);
+
+        if (userBookings.length === 0) {
+          tripsContainer.innerHTML = `
+          <div class="no-trips">
+            <h3>No Completed Trips Yet</h3>
+            <p>Once you complete your bookings, they'll appear here with all your travel memories!</p>
+            <a href="main.html" class="book-now-btn">Plan Your First Trip</a>
+          </div>
+        `;
+          return;
+        }
+
+        tripsContainer.innerHTML = "";
+
+        userBookings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        userBookings.forEach((booking, index) => {
+          const tripItem = document.createElement("div");
+          tripItem.className = "trip-item";
+          const icons = {
+            flight: "✈️",
+            train: "🚆",
+            bus: "🚌",
+            cab: "🚗",
+            tour: "🏖️",
+            cruise: "🚢",
+            hotel: "🏨",
+          };
+
+          const bookingDate = new Date(booking.date);
+          const rating = Math.floor(Math.random() * 2) + 4;
+          const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
+          const memories = [
+            "📸 Amazing photos captured",
+            "🍽️ Delicious local cuisine experienced",
+            "👥 Met wonderful people",
+            "🌅 Breathtaking sunrise views",
+            "🎭 Cultural experiences gained",
+            "🏛️ Historical sites explored",
+            "🛍️ Great shopping discoveries",
+            "🎵 Local music and festivals enjoyed",
+          ];
+
+          const randomMemory =
+            memories[Math.floor(Math.random() * memories.length)];
+
+          tripItem.innerHTML = `
+          <div class="trip-main">
+            <div class="trip-icon">${icons[booking.type] || ""}</div>
+            <div class="trip-info">
+              <div class="trip-title">${booking.title}</div>
+              <div class="trip-details">
+                <strong>Type:</strong> ${
+                  booking.type.charAt(0).toUpperCase() + booking.type.slice(1)
+                } | 
+                <strong>Price:</strong> ${booking.price} | 
+                <strong>Booking ID:</strong> ${booking.id}
+              </div>
+              <div class="trip-date">
+                <strong>Completed on:</strong> ${bookingDate.toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
+              </div>
+              <div class="rating">
+                <span style="color: #666; margin-right: 8px;">Your Rating:</span>
+                <span class="star">${stars}</span>
+              </div>
+              <div class="memories">${randomMemory}</div>
+            </div>
+          </div>
+          <div class="trip-actions">
+            <button class="action-btn review-btn" onclick="writeReview('${
+              booking.id
+            }')">
+              Write Review
+            </button>
+            <button class="action-btn download-btn" onclick="downloadReceipt('${
+              booking.id
+            }')">
+              Download Receipt
+            </button>
+            <button class="recap-btn" onclick="event.stopPropagation(); openJourneyRecap('${
+              booking.title
+            }')">
+              📸 Journey Recap
+            </button>
+          </div>
+        `;
+
+          tripItem.addEventListener("click", (e) => {
+            if (!e.target.closest("button")) {
+              openJourneyRecap(booking.title);
+            }
+          });
+
+          tripsContainer.appendChild(tripItem);
+        });
+      }
+
+      function loadTravelStats(bookings, container) {
+        const totalTrips = bookings.length;
+        const totalSpent = bookings.reduce((sum, booking) => {
+          const price = parseInt(booking.price.replace(/[₹,]/g, "")) || 0;
+          return sum + price;
+        }, 0);
+
+        const destinations = new Set(bookings.map((b) => b.title.split(" ")[0]))
+          .size;
+
+        const avgRating =
+          totalTrips > 0 ? (4.2 + Math.random() * 0.6).toFixed(1) : 0;
+
+        container.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-number">${totalTrips}</div>
+          <div class="stat-label">Trips Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">₹${totalSpent.toLocaleString()}</div>
+          <div class="stat-label">Total Spent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${destinations}</div>
+          <div class="stat-label">Destinations Visited</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${avgRating}★</div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+      `;
+      }
+
+      function openJourneyRecap(tripName) {
+        currentTrip = tripName;
+        document.getElementById(
+          "tripTitle"
+        ).textContent = `Upload Your Journey Photos - ${tripName}`;
+        document.getElementById("journeyModal").style.display = "block";
+        document.getElementById("uploadSection").style.display = "block";
+        document.getElementById("slideshowContainer").style.display = "none";
+        document.getElementById("imagePreview").innerHTML = "";
+        document.getElementById("startSlideshowBtn").style.display = "none";
+        uploadedImages = [];
+        currentSlide = 0;
+      }
+
+      function closeJourneyRecap() {
+        document.getElementById("journeyModal").style.display = "none";
+      }
+
+      function handleImageUpload(event) {
+        const files = event.target.files;
+        const preview = document.getElementById("imagePreview");
+
+        for (let file of files) {
+          if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              uploadedImages.push({
+                src: e.target.result,
+                name: file.name,
+                caption: `Beautiful moment from ${currentTrip}`,
+              });
+
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              preview.appendChild(img);
+
+              if (uploadedImages.length > 0) {
+                document.getElementById("startSlideshowBtn").style.display =
+                  "inline-block";
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+
+      function startSlideshow() {
+        if (uploadedImages.length === 0) {
+          alert("Please upload some photos first!");
+          return;
+        }
+
+        document.getElementById("uploadSection").style.display = "none";
+        document.getElementById("slideshowContainer").style.display = "block";
+
+        const slidesContainer = document.getElementById("slidesContainer");
+        slidesContainer.innerHTML = "";
+
+        uploadedImages.forEach((image, index) => {
+          const slide = document.createElement("div");
+          slide.className = "slide";
+          if (index === 0) slide.classList.add("active");
+
+          slide.innerHTML = `
+          <img src="${image.src}" alt="${image.name}">
+          <div class="slide-caption">
+            <h3>${currentTrip}</h3>
+            <p>${image.caption}</p>
+          </div>
+        `;
+
+          slidesContainer.appendChild(slide);
+        });
+
+        updateSlideCounter();
+      }
+
+      function changeSlide(direction) {
+        const slides = document.querySelectorAll(".slide");
+        slides[currentSlide].classList.remove("active");
+
+        currentSlide += direction;
+
+        if (currentSlide >= slides.length) {
+          currentSlide = 0;
+        } else if (currentSlide < 0) {
+          currentSlide = slides.length - 1;
+        }
+
+        slides[currentSlide].classList.add("active");
+        updateSlideCounter();
+      }
+
+      function updateSlideCounter() {
+        document.getElementById("slideCounter").textContent = `${
+          currentSlide + 1
+        } / ${uploadedImages.length}`;
+      }
+
+      function writeReview(bookingId) {
+        const bookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+        const booking = bookings.find((b) => b.id === bookingId);
+
+        if (booking) {
+          currentBookingForReview = booking;
+          showReviewModal(booking);
+        }
+      }
+
+      function showReviewModal(booking) {
+        const modal = document.getElementById("review-modal");
+        const tripInfo = document.getElementById("review-trip-info");
+
+        tripInfo.innerHTML = `
+        <strong>${booking.title}</strong><br>
+        <span style="color: #666;">Booking ID: ${booking.id}</span><br>
+        <span style="color: #666;">Date: ${new Date(
+          booking.date
+        ).toLocaleDateString()}</span>
+      `;
+
+        selectedRating = 0;
+        document.getElementById("review-textarea").value = "";
+        updateStarDisplay();
+
+        modal.classList.add("show");
+      }
+
+      function closeReviewModal() {
+        document.getElementById("review-modal").classList.remove("show");
+        currentBookingForReview = null;
+        selectedRating = 0;
+      }
+
+      function setRating(rating) {
+        selectedRating = rating;
+        updateStarDisplay();
+      }
+
+      function updateStarDisplay() {
+        const stars = document.querySelectorAll(".star-btn");
+        stars.forEach((star, index) => {
+          if (index < selectedRating) {
+            star.classList.add("active");
+          } else {
+            star.classList.remove("active");
+          }
+        });
+      }
+
+      function submitReview() {
+        const reviewText = document
+          .getElementById("review-textarea")
+          .value.trim();
+
+        if (selectedRating === 0) {
+          alert("Please select a rating");
+          return;
+        }
+
+        if (!reviewText) {
+          alert("Please write a review");
+          return;
+        }
+
+        if (reviewText.length < 10) {
+          alert("Please write a more detailed review (at least 10 characters)");
+          return;
+        }
+
+        const reviews = JSON.parse(
+          localStorage.getItem("travelmate_reviews") || "[]"
+        );
+        const newReview = {
+          bookingId: currentBookingForReview.id,
+          userId: currentBookingForReview.userId,
+          rating: selectedRating,
+          review: reviewText,
+          tripTitle: currentBookingForReview.title,
+          date: new Date().toISOString(),
+        };
+
+        reviews.push(newReview);
+        localStorage.setItem("travelmate_reviews", JSON.stringify(reviews));
+
+        alert(
+          "Thank you for your review! Your feedback helps other travelers make better decisions."
+        );
+        closeReviewModal();
+      }
+
+      function downloadReceipt(bookingId) {
+        const bookings = JSON.parse(
+          localStorage.getItem("travelmate_bookings") || "[]"
+        );
+        const booking = bookings.find((b) => b.id === bookingId);
+        const user = JSON.parse(
+          localStorage.getItem("travelmate_current_user") || "{}"
+        );
+
+        if (booking) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          doc.setFontSize(20);
+          doc.setTextColor(0, 128, 128);
+          doc.text("TRAVELMATE", 105, 20, { align: "center" });
+
+          doc.setFontSize(16);
+          doc.setTextColor(0, 0, 0);
+          doc.text("BOOKING RECEIPT", 105, 30, { align: "center" });
+
+          doc.setDrawColor(0, 128, 128);
+          doc.line(20, 35, 190, 35);
+
+          doc.setFontSize(12);
+          let yPos = 50;
+
+          doc.setFont(undefined, "bold");
+          doc.text("Booking Information:", 20, yPos);
+          yPos += 10;
+
+          doc.setFont(undefined, "normal");
+          doc.text(`Booking ID: ${booking.id}`, 20, yPos);
+          yPos += 8;
+          doc.text(`Service: ${booking.title}`, 20, yPos);
+          yPos += 8;
+          doc.text(
+            `Type: ${
+              booking.type.charAt(0).toUpperCase() + booking.type.slice(1)
+            }`,
+            20,
+            yPos
+          );
+          yPos += 8;
+          doc.text(`Price: ${booking.price}`, 20, yPos);
+          yPos += 8;
+          doc.text(
+            `Status: ${
+              booking.status.charAt(0).toUpperCase() + booking.status.slice(1)
+            }`,
+            20,
+            yPos
+          );
+          yPos += 8;
+          doc.text(
+            `Booking Date: ${new Date(booking.date).toLocaleDateString()}`,
+            20,
+            yPos
+          );
+          yPos += 15;
+
+          doc.setFont(undefined, "bold");
+          doc.text("Customer Information:", 20, yPos);
+          yPos += 10;
+
+          doc.setFont(undefined, "normal");
+          doc.text(
+            `Name: ${user.firstname || ""} ${user.lastname || ""}`,
+            20,
+            yPos
+          );
+          yPos += 8;
+          doc.text(`Email: ${user.email || "N/A"}`, 20, yPos);
+          yPos += 8;
+          doc.text(`Phone: ${user.phone || "N/A"}`, 20, yPos);
+          yPos += 15;
+
+          if (booking.from && booking.to) {
+            doc.setFont(undefined, "bold");
+            doc.text("Journey Details:", 20, yPos);
+            yPos += 10;
+
+            doc.setFont(undefined, "normal");
+            doc.text(`From: ${booking.from}`, 20, yPos);
+            yPos += 8;
+            doc.text(`To: ${booking.to}`, 20, yPos);
+            yPos += 15;
+          }
+
+          doc.setFont(undefined, "bold");
+          doc.text("Payment Details:", 20, yPos);
+          yPos += 10;
+
+          doc.setFont(undefined, "normal");
+          doc.text(`Amount Paid: ${booking.price}`, 20, yPos);
+          yPos += 8;
+          doc.text(
+            `Payment Method: ${booking.paymentMethod || "Card"}`,
+            20,
+            yPos
+          );
+          yPos += 8;
+          doc.text(`Payment Status: Completed`, 20, yPos);
+          yPos += 20;
+
+          doc.setDrawColor(0, 128, 128);
+          doc.line(20, yPos, 190, yPos);
+          yPos += 10;
+
+          doc.setFontSize(10);
+          doc.setTextColor(100, 100, 100);
+          doc.text("Thank you for choosing TravelMate!", 105, yPos, {
+            align: "center",
+          });
+          yPos += 6;
+          doc.text("Visit us at: www.travelmate.com", 105, yPos, {
+            align: "center",
+          });
+          yPos += 6;
+          doc.text(
+            "Support: support@travelmate.com | Phone: +91-1800-XXX-XXXX",
+            105,
+            yPos,
+            { align: "center" }
+          );
+
+          doc.save(`TravelMate_Receipt_${booking.id}.pdf`);
+        }
+      }
+
+      window.onclick = function (event) {
+        const journeyModal = document.getElementById("journeyModal");
+        const reviewModal = document.getElementById("review-modal");
+
+        if (event.target === journeyModal) {
+          closeJourneyRecap();
+        }
+        if (event.target === reviewModal) {
+          closeReviewModal();
+        }
+      };
+
+      document.addEventListener("keydown", function (event) {
+        const journeyModal = document.getElementById("journeyModal");
+        if (journeyModal.style.display === "block") {
+          if (event.key === "ArrowLeft") {
+            changeSlide(-1);
+          } else if (event.key === "ArrowRight") {
+            changeSlide(1);
+          } else if (event.key === "Escape") {
+            closeJourneyRecap();
+          }
+        }
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        loadCompletedTrips();
+      });
+    </script>
+  </body>
+</html>

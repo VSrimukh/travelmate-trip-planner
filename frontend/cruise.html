@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TravelMate - Cruise Booking</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("project images/m1.jpg");
+        min-height: 100vh;
+      }
+
+      .header {
+        background: #008080;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .search-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        align-items: end;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #008080;
+      }
+
+      .search-btn {
+        background: #008080;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+
+      .search-btn:hover {
+        background: #006666;
+      }
+
+      .cruise-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+
+      .cruise-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .cruise-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .cruise-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(45deg, #008080, #00a0a0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        position: relative;
+      }
+
+      .cruise-info {
+        padding: 25px;
+      }
+
+      .cruise-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #008080;
+        margin-bottom: 10px;
+      }
+
+      .cruise-route {
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+
+      .cruise-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #555;
+      }
+
+      .cruise-amenities {
+        margin-bottom: 20px;
+      }
+
+      .cruise-amenities h4 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 16px;
+      }
+
+      .amenities-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .amenity-tag {
+        background: #e8f5e8;
+        color: #2e7d32;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .cruise-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .cruise-price {
+        text-align: left;
+      }
+
+      .price-amount {
+        font-size: 28px;
+        font-weight: bold;
+        color: #e74c3c;
+      }
+
+      .price-per {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .book-cruise-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .book-cruise-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 50px;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        margin-top: 30px;
+      }
+
+      .cruise-duration {
+        background: #008080;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+      }
+
+      @media (max-width: 768px) {
+        .search-form {
+          grid-template-columns: 1fr;
+        }
+
+        .cruise-results {
+          grid-template-columns: 1fr;
+        }
+
+        .cruise-details {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="main.html" class="back-btn">← Back</a>
+      <h1>Cruise Booking</h1>
+      <p>Discover luxury cruise experiences across beautiful destinations</p>
+    </div>
+
+    <div class="container">
+      <div class="search-section">
+        <h3 style="margin-top: 0; color: #008080; margin-bottom: 25px">
+          Find Your Perfect Cruise
+        </h3>
+        <div class="search-form">
+          <div class="form-group">
+            <label for="departure-port">Departure Port</label>
+            <select id="departure-port">
+              <option value="">Select departure port</option>
+              <option value="mumbai">Mumbai, India</option>
+              <option value="goa">Goa, India</option>
+              <option value="kochi">Kochi, India</option>
+              <option value="chennai">Chennai, India</option>
+              <option value="singapore">Singapore</option>
+              <option value="dubai">Dubai, UAE</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="destination">Destination</label>
+            <select id="destination">
+              <option value="">Any destination</option>
+              <option value="maldives">Maldives</option>
+              <option value="sri-lanka">Sri Lanka</option>
+              <option value="thailand">Thailand</option>
+              <option value="malaysia">Malaysia</option>
+              <option value="arabian-gulf">Arabian Gulf</option>
+              <option value="mediterranean">Mediterranean</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="departure-date">Departure Date</label>
+            <input type="date" id="departure-date" />
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Duration</label>
+            <select id="duration">
+              <option value="">Any duration</option>
+              <option value="3-5">3-5 Days</option>
+              <option value="6-10">6-10 Days</option>
+              <option value="11-15">11-15 Days</option>
+              <option value="16+">16+ Days</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="passengers">Passengers</label>
+            <select id="passengers">
+              <option value="1">1 Passenger</option>
+              <option value="2">2 Passengers</option>
+              <option value="3">3 Passengers</option>
+              <option value="4">4 Passengers</option>
+              <option value="5+">5+ Passengers</option>
+            </select>
+          </div>
+
+          <button class="search-btn" onclick="searchCruises()">
+            Search Cruises
+          </button>
+        </div>
+      </div>
+
+      <div class="cruise-results" id="cruise-results"></div>
+    </div>
+
+    <script src="booking-modal.js"></script>
+    <script>
+      const cruises = [
+        {
+          title: "Royal Caribbean Voyager",
+          route: "Mumbai → Goa → Maldives → Mumbai",
+          duration: "7 Days, 6 Nights",
+          departurePort: "mumbai",
+          destination: "maldives",
+          image: "🚢 Luxury Liner",
+          price: "₹85,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Swimming Pool",
+            "Spa & Wellness",
+            "Fine Dining",
+            "Entertainment Shows",
+            "Casino",
+            "Kids Club",
+          ],
+          details: {
+            departure: "Every Saturday",
+            capacity: "3000 guests",
+            cabins: "Interior & Ocean View",
+            meals: "All meals included",
+          },
+        },
+        {
+          title: "Celebrity Constellation",
+          route: "Goa → Kochi → Sri Lanka → Goa",
+          duration: "5 Days, 4 Nights",
+          departurePort: "goa",
+          destination: "sri-lanka",
+          image: "⭐ Celebrity Class",
+          price: "₹65,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Specialty Restaurants",
+            "Fitness Center",
+            "Library",
+            "Art Gallery",
+            "Shopping",
+            "WiFi",
+          ],
+          details: {
+            departure: "Twice weekly",
+            capacity: "2170 guests",
+            cabins: "Balcony & Suite",
+            meals: "Premium dining",
+          },
+        },
+        {
+          title: "MSC Splendida",
+          route: "Chennai → Singapore → Thailand → Chennai",
+          duration: "10 Days, 9 Nights",
+          departurePort: "chennai",
+          destination: "thailand",
+          image: "🇮🇹 MSC Experience",
+          price: "₹1,20,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Water Park",
+            "Theater",
+            "Shopping Mall",
+            "Multiple Pools",
+            "Sports Deck",
+            "Spa",
+          ],
+          details: {
+            departure: "Monthly",
+            capacity: "4363 guests",
+            cabins: "All categories",
+            meals: "International cuisine",
+          },
+        },
+        {
+          title: "Norwegian Gem",
+          route: "Dubai → Muscat → Abu Dhabi → Dubai",
+          duration: "4 Days, 3 Nights",
+          departurePort: "dubai",
+          destination: "arabian-gulf",
+          image: "🛳️ Norwegian Cruise",
+          price: "₹55,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Rock Climbing",
+            "Mini Golf",
+            "Bowling",
+            "Multiple Restaurants",
+            "Bars & Lounges",
+            "Spa",
+          ],
+          details: {
+            departure: "Weekly",
+            capacity: "2394 guests",
+            cabins: "Modern amenities",
+            meals: "Freestyle dining",
+          },
+        },
+        {
+          title: "Costa Deliziosa",
+          route: "Mumbai → Maldives → Sri Lanka → Mumbai",
+          duration: "12 Days, 11 Nights",
+          departurePort: "mumbai",
+          destination: "maldives",
+          image: "🇮🇹 Italian Style",
+          price: "₹1,50,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Italian Cuisine",
+            "Grand Theater",
+            "Spa Samsara",
+            "Shopping Center",
+            "Kids Areas",
+            "Casino",
+          ],
+          details: {
+            departure: "Bi-weekly",
+            capacity: "2826 guests",
+            cabins: "Elegant interiors",
+            meals: "Italian specialties",
+          },
+        },
+        {
+          title: "Princess Sapphire",
+          route: "Singapore → Malaysia → Thailand → Singapore",
+          duration: "8 Days, 7 Nights",
+          departurePort: "singapore",
+          destination: "malaysia",
+          image: "👑 Princess Cruises",
+          price: "₹95,000",
+          pricePerPerson: "per person",
+          amenities: [
+            "Movies Under Stars",
+            "Sanctuary",
+            "Crown Grill",
+            "Piazza",
+            "Lotus Spa",
+            "ScholarShip@Sea",
+          ],
+          details: {
+            departure: "Weekly",
+            capacity: "2670 guests",
+            cabins: "Princess luxury",
+            meals: "Gourmet dining",
+          },
+        },
+      ];
+
+      function searchCruises() {
+        const departurePort = document.getElementById("departure-port").value;
+        const destination = document.getElementById("destination").value;
+        const departureDate = document.getElementById("departure-date").value;
+        const duration = document.getElementById("duration").value;
+        const passengers = document.getElementById("passengers").value;
+
+        let filteredCruises = cruises;
+
+        if (departurePort) {
+          filteredCruises = filteredCruises.filter(
+            (cruise) => cruise.departurePort === departurePort
+          );
+        }
+
+        if (destination) {
+          filteredCruises = filteredCruises.filter(
+            (cruise) => cruise.destination === destination
+          );
+        }
+        if (duration) {
+          filteredCruises = filteredCruises.filter((cruise) => {
+            const cruiseDays = parseInt(cruise.duration.split(" ")[0]);
+            switch (duration) {
+              case "3-5":
+                return cruiseDays >= 3 && cruiseDays <= 5;
+              case "6-10":
+                return cruiseDays >= 6 && cruiseDays <= 10;
+              case "11-15":
+                return cruiseDays >= 11 && cruiseDays <= 15;
+              case "16+":
+                return cruiseDays >= 16;
+              default:
+                return true;
+            }
+          });
+        }
+
+        displayCruises(filteredCruises);
+
+        if (filteredCruises.length > 0) {
+          alert(
+            `Found ${filteredCruises.length} cruise(s) matching your criteria`
+          );
+        } else {
+          alert(
+            "No cruises found matching your search criteria. Try adjusting your filters."
+          );
+        }
+      }
+
+      function displayCruises(cruisesToShow) {
+        const container = document.getElementById("cruise-results");
+        container.innerHTML = "";
+
+        if (cruisesToShow.length === 0) {
+          container.innerHTML = `
+          <div class="no-results">
+            <h3>No cruises found</h3>
+            <p>Try adjusting your search criteria or browse all available cruises</p>
+            <button class="search-btn" onclick="displayCruises(cruises)" style="margin-top: 20px;">
+              Show All Cruises
+            </button>
+          </div>
+        `;
+          return;
+        }
+
+        cruisesToShow.forEach((cruise, index) => {
+          const cruiseCard = document.createElement("div");
+          cruiseCard.className = "cruise-card";
+          cruiseCard.innerHTML = `
+          <div class="cruise-image">
+            ${cruise.image}
+            <div class="cruise-duration">${cruise.duration}</div>
+          </div>
+          <div class="cruise-info">
+            <div class="cruise-title">${cruise.title}</div>
+            <div class="cruise-route">🚢 ${cruise.route}</div>
+            
+            <div class="cruise-details">
+              <div class="detail-item">
+                📅 <span>${cruise.details.departure}</span>
+              </div>
+              <div class="detail-item">
+                👥 <span>${cruise.details.capacity}</span>
+              </div>
+              <div class="detail-item">
+                🛏️ <span>${cruise.details.cabins}</span>
+              </div>
+              <div class="detail-item">
+                🍽️ <span>${cruise.details.meals}</span>
+              </div>
+            </div>
+            
+            <div class="cruise-amenities">
+              <h4>✨ Amenities & Features:</h4>
+              <div class="amenities-list">
+                ${cruise.amenities
+                  .map(
+                    (amenity) => `<span class="amenity-tag">${amenity}</span>`
+                  )
+                  .join("")}
+              </div>
+            </div>
+            
+            <div class="cruise-footer">
+              <div class="cruise-price">
+                <div class="price-amount">${cruise.price}</div>
+                <div class="price-per">${cruise.pricePerPerson}</div>
+              </div>
+              <button class="book-cruise-btn" onclick="bookCruise('${
+                cruise.title
+              }', '${cruise.price}', '${cruise.duration}', '${cruise.route}')">
+                Book Now
+              </button>
+            </div>
+          </div>
+        `;
+          container.appendChild(cruiseCard);
+        });
+      }
+
+      function bookCruise(cruiseName, price, duration, route) {
+        const departureDate = document.getElementById("departure-date").value;
+
+        const cruiseData = {
+          id: `CRUISE${Date.now()}`,
+          type: "cruise",
+          title: cruiseName,
+          from: route.split("→")[0].trim(),
+          to: route.split("→")[route.split("→").length - 1].trim(),
+          date:
+            departureDate ||
+            new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .split("T")[0],
+          time: duration,
+          price: price,
+          route: route,
+        };
+
+        window.showBookingModal(cruiseData);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("departure-date").min = today;
+        displayCruises(cruises);
+      });
+    </script>
+  </body>
+</html>

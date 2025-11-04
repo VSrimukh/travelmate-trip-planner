@@ -1,0 +1,78 @@
+{
+  "summary": {
+    "avg_keyword_accuracy": 93.8,
+    "avg_structure_score": 100.0,
+    "avg_overall_accuracy": 96.2,
+    "grade": "Excellent",
+    "total_tests": 4,
+    "successful_tests": 4
+  },
+  "detailed_results": [
+    {
+      "destination": "Goa",
+      "status": "success",
+      "keyword_accuracy": 100.0,
+      "structure_score": 100.0,
+      "overall_accuracy": 100.0,
+      "found_keywords": [
+        "beach",
+        "calangute",
+        "baga",
+        "fort",
+        "seafood"
+      ],
+      "missing_keywords": [],
+      "response_length": 2456,
+      "has_proper_structure": true
+    },
+    {
+      "destination": "Jaipur",
+      "status": "success",
+      "keyword_accuracy": 75.0,
+      "structure_score": 100.0,
+      "overall_accuracy": 85.0,
+      "found_keywords": [
+        "hawa mahal",
+        "amber",
+        "palace"
+      ],
+      "missing_keywords": [
+        "market"
+      ],
+      "response_length": 1882,
+      "has_proper_structure": true
+    },
+    {
+      "destination": "Kerala",
+      "status": "success",
+      "keyword_accuracy": 100.0,
+      "structure_score": 100.0,
+      "overall_accuracy": 100.0,
+      "found_keywords": [
+        "backwater",
+        "houseboat",
+        "alleppey",
+        "boat"
+      ],
+      "missing_keywords": [],
+      "response_length": 2071,
+      "has_proper_structure": true
+    },
+    {
+      "destination": "Udaipur",
+      "status": "success",
+      "keyword_accuracy": 100.0,
+      "structure_score": 100.0,
+      "overall_accuracy": 100.0,
+      "found_keywords": [
+        "lake",
+        "palace",
+        "pichola",
+        "boat"
+      ],
+      "missing_keywords": [],
+      "response_length": 2301,
+      "has_proper_structure": true
+    }
+  ]
+}
